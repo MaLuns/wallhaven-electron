@@ -1,0 +1,140 @@
+* {
+    padding              : 0;
+    margin               : 0;
+    user-select          : none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select  : none !important;
+    cursor               : url(../assets/cursor.png), auto !important;
+}
+
+img {
+    cursor: url(../assets/img-cursor.png), auto !important;
+}
+
+body {
+    background-color: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar {
+    width : 6px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background   : url(https://w.wallhaven.cc/full/2e/wallhaven-2erpym.jpg);
+    filter       : blur(10px);
+}
+
+
+.el-message {
+    min-width: 0;
+    padding  : 8px 10px;
+    left     : 260px;
+    right    : 0;
+    margin   : 0 auto;
+    width    : fit-content;
+}
+
+.el-message--success {
+    background-color: #fff;
+    border-color    : #fff;
+
+    .el-icon-success {
+        color: #38acfa;
+    }
+
+    .el-message__content {
+        color: rgb(41, 41, 41);
+    }
+}
+
+@bgColor: #201f29;
+@bgTheme: rgba(0, 0, 0, 0.623);
+;
+@color : #eee;
+
+.el-checkbox-group {
+    box-shadow   : 0 0 15px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+
+    .el-checkbox-button {
+        &.is-checked {
+            .el-checkbox-button__inner {
+                color           : #38acfa;
+                background-color: @bgTheme;
+                border-color    : @bgTheme;
+            }
+
+            &:first-child {
+                .el-checkbox-button__inner {
+                    border-left-color: @bgTheme;
+                }
+            }
+        }
+
+        .el-checkbox-button__inner {
+            border    : none !important;
+            box-shadow: none !important;
+            background: @bgColor;
+            color     : #a0a0a0;
+        }
+    }
+}
+
+.el-select,
+.el-input-group {
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
+}
+
+.el-select-dropdown,
+.el-input__inner {
+    color      : #a0a0a0;
+    background : @bgColor;
+    border     : none;
+    user-select: none;
+
+    :host {
+        user-select: none;
+    }
+}
+
+.el-input-group__append {
+    background: rgba(0, 0, 0, 0.623);
+    border    : none;
+}
+
+.popper__arrow {
+    border-bottom-color: @bgColor  !important;
+
+    &::after {
+        border-bottom-color: @bgColor  !important;
+    }
+}
+
+.el-select-dropdown__item {
+
+    &.selected,
+    &.hover,
+    &:hover {
+        color     : #a0a0a0;
+        background: @bgColor;
+        border    : none;
+    }
+}
+
+.el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.09);
+}
+
+.el-badge__content {
+    border: none;
+}
+
+.mgl10 {
+    margin-left: 10px;
+}
+
+.mgr10 {
+    margin-right: 10px;
+}

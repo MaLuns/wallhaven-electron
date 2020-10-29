@@ -1,0 +1,59 @@
+{
+  "name": "one-wallhaven",
+  "version": "1.0.0",
+  "description": "one-wallhaven 壁纸程序",
+  "main": "./src/main/index.js",
+  "scripts": {
+    "serve:web": "vue-cli-service serve",
+    "build:web": "vue-cli-service build ",
+    "serve:exe": "./node_modules/.bin/electron ./",
+    "build:exe": "./node_modules/.bin/electron-builder build"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "element-ui": "^2.13.2",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "electron": "^10.0.0",
+    "electron-builder": "^22.8.1",
+    "@vue/cli-service": "^4.5.0",
+    "babel-plugin-component": "^1.1.1",
+    "less": "^3.12.2",
+    "less-loader": "^7.0.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "author": {
+    "name": "mal",
+    "email": "381399021@qq.com"
+  },
+  "homepage": "http://www.www.com",
+  "build": {
+    "appId": "com.imalun.one-wallhaven",
+    "copyright": "©2019 MAL. All rights reserved.",
+    "productName": "one-wallhaven",
+    "files": {
+      "filter": [
+        "!**/node_modules/*"
+      ]
+    },
+    "directories": {
+      "output": "./dist"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./build/logo64x64.ico",
+      "uninstallerIcon": "./build/logo64x64.ico",
+      "installerHeaderIcon": "./build/logo64x64.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "wallhaven"
+    },
+    "win": {
+      "icon": "./build/logo256x256.ico"
+    }
+  }
+}
