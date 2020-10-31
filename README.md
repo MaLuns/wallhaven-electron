@@ -33,11 +33,11 @@ npm run build:exe
   - renderer 渲染线程（前端打包输出目录）
 ```
 ## 截图
-<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025512demo.png" alt="首页" />
-<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025505demo2.png" alt="分类" />
-<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025530demo5.png" alt="查看" />
-<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025517demo3.png" alt="收藏" />
-<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025522demo4.png" alt="下载" />
+<img src="https://pan.bilnn.com/api/v3/file/sourcejump/Xm9Gtd/MwMX00DchbCDz3Wb_hv3ew**" alt="首页" />
+<img src="https://pan.bilnn.com/api/v3/file/sourcejump/K59mHQ/xWd46Fcu7xNtcDpTQjNmcA**" alt="分类" />
+<img src="https://pan.bilnn.com/api/v3/file/sourcejump/Q29QFb/t-QYGpR2JC92tlyrSCAZRQ**" alt="查看" />
+<img src="https://pan.bilnn.com/api/v3/file/sourcejump/YdZXiv/kkjnhlZeH2P0XOPHaMgUYA**" alt="收藏" />
+<img src="https://pan.bilnn.com/api/v3/file/sourcejump/B3P4U2/o8_yKHJCTDywb0bQ-VJinQ**" alt="下载" />
 
 ## Api
 [wallhaven.cc](https://wallhaven.cc/help/api)
