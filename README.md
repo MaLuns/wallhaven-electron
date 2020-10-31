@@ -32,12 +32,12 @@ npm run build:exe
   - main 主线程目录
   - renderer 渲染线程（前端打包输出目录）
 ```
-## demo
-<img src="demo/demo.png" alt="首页" />
-<img src="demo/demo2.png" alt="分类" />
-<img src="demo/demo5.png" alt="查看" />
-<img src="demo/demo3.png" alt="收藏" />
-<img src="demo/demo4.png" alt="下载" />
+## 截图
+<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025512demo.png" alt="首页" />
+<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025505demo2.png" alt="分类" />
+<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025530demo5.png" alt="查看" />
+<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025517demo3.png" alt="收藏" />
+<img src="https://images.cnblogs.com/cnblogs_com/nextl/1873509/o_201031025522demo4.png" alt="下载" />
 
 ## Api
 [wallhaven.cc](https://wallhaven.cc/help/api)
