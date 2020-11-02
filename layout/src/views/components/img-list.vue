@@ -12,7 +12,7 @@
         </template>
         <template v-else>
             <template v-if="list.length>0">
-                <li v-for="(item,index) in list" :key="item.id+index">
+                <li v-for="(item,index) in list" :key="item.id+index" @contextmenu.prevent="openMenu($event)">
                     <div class="img">
                         <img @error="handleError" loading="lazy" draggable="false" :src="item.thumbs.small" @click="handleView(item)" />
                         <div class="img-info">
@@ -32,6 +32,13 @@
                 <empty-page title="未找到图片信息~"></empty-page>
             </template>
         </template>
+        <!-- <context-menu class="right-menu" :offset="menuOffset">
+            <template v-slot:menuItem>
+                <li>收藏</li>
+                <li>下载</li>
+                <li>查看</li>
+            </template>
+        </context-menu> -->
     </ul>
 </template>
 
@@ -43,7 +50,13 @@
         name: "ImgList",
         data() {
             return {
-                scrollTop: 0
+                scrollTop: 0,
+                menuOffset: {
+                    offsetLeft: 0,
+                    offsetWidth: 0,
+                    clientX: 0,
+                    clientY: 0
+                },
             };
         },
         props: {
@@ -112,6 +125,13 @@
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
                 this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
                 this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+            },
+            openMenu(e, data) {
+                this.menuOffset.offsetLeft = this.$el.getBoundingClientRect().left // container margin left
+                this.menuOffset.offsetWidth = this.$el.offsetWidth // container width
+                this.menuOffset.clientX = e.clientX
+                this.menuOffset.clientY = e.clientY
+
             }
         }
     };
