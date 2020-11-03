@@ -2,21 +2,21 @@
  * @Author: 白云苍狗 
  * @Date: 2020-09-25 18:27:17 
  * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-02 23:13:53
+ * @Last Modified time: 2020-11-03 23:12:26
  */
 <template>
     <transition name="slide">
         <div v-if="show" class="animation-content">
             <div class="img-view" ref="imgContent" v-loading="loading">
                 <img @error="handleError" ref="img" draggable="false" v-dragwidth :width="img.w" :height="img.h" :src="path" />
-                <div class="btns">
-                    <div @click="handleClose" class="iconfont icon-guanbi"></div>
-                    <div class="iconfont icon-huifu" @click="handleRef"></div>
-                    <div class="iconfont icon-xiazai" @click="handleDownFile()"></div>
-                    <div v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
-                    <div v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
-                </div>
                 <div class="zoom-bage">{{zoom}}</div>
+            </div>
+            <div class="btns">
+                <div @click="handleClose" class="iconfont icon-guanbi"></div>
+                <div class="iconfont icon-huifu" @click="handleRef"></div>
+                <div class="iconfont icon-xiazai" @click="handleDownFile()"></div>
+                <div v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
+                <div v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
             </div>
         </div>
     </transition>
@@ -76,6 +76,7 @@
                         this.loading = false;
                     }).catch(res => {
                         //this.$message.error('图片加载失败')
+                        console.log(res)
                         this.loading = false;
                     })
                 }
@@ -152,8 +153,20 @@
             // 下载
             handleDownFile(item = this.data) {
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-                this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
-                this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+
+                if (/^blob:/.test(this.path)) {
+                    const a = document.createElement("a")
+                    a.href = this.path
+                    a.download = `one-${id}${url.substr(url.lastIndexOf('.'))}`
+                    a.click()
+                    setTimeout(() => {
+                        URL.revokeObjectURL(a.href)
+                        a.remove();
+                    }, 3000)
+                } else {
+                    this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
+                    this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+                }
             },
             // 获取收藏状态
             getCollection(id) {
@@ -232,42 +245,43 @@
                 position: absolute;
             }
 
-            .btns {
-                position: absolute;
-                right: 20px;
-                bottom: 30px;
-                color: #ffffff9e;
-
-                div {
-                    margin: 10px 0;
-                    padding: 16px;
-                    border-radius: 50%;
-                    transition: all 0.3s ease;
-                    background: #0016484f;
-                    cursor: url(../../assets/cursor.png), auto !important;
-
-                    &:hover {
-                        background: #38acfa;
-                        color: #ffffff;
-                    }
-
-                    &.shoucang {
-                        color: #38acfa;
-                        &:hover {
-                            color: #ffffff;
-                        }
-                    }
-                }
-            }
-
             .zoom-bage {
                 position: absolute;
                 right: 0px;
-                bottom: 5px;
-                font-size: 16px;
+                bottom: 10px;
+                font-size: 14px;
                 color: #fff;
                 width: 88px;
                 text-align: center;
+            }
+        }
+
+        .btns {
+            position: absolute;
+            right: 20px;
+            top: 610px;
+            color: #ffffff9e;
+            z-index: 9999;
+
+            div {
+                margin: 10px 0;
+                padding: 16px;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                background: #0016484f;
+                cursor: url(../../assets/cursor.png), auto !important;
+
+                &:hover {
+                    background: #38acfa;
+                    color: #ffffff;
+                }
+
+                &.shoucang {
+                    color: #38acfa;
+                    &:hover {
+                        color: #ffffff;
+                    }
+                }
             }
         }
     }

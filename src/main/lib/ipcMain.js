@@ -117,8 +117,7 @@ const mainWindowIpcStart = function (win) {
         try {
 
             const url = item.getURL()
-            let cacheItem = cacheDownItem[url];
-
+            let cacheItem = cacheDownItem[url] || {};
             // 获取文件的总大小
             const totalBytes = item.getTotalBytes();
             // 设置下载路径
@@ -173,6 +172,7 @@ const mainWindowIpcStart = function (win) {
                 }
                 //删除缓存
                 delete cacheDownItem[url]
+                cacheItem = null;
                 item = null;
             })
 
