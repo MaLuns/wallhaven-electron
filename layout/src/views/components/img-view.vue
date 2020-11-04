@@ -2,7 +2,7 @@
  * @Author: 白云苍狗 
  * @Date: 2020-09-25 18:27:17 
  * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-03 23:12:26
+ * @Last Modified time: 2020-11-04 20:27:53
  */
 <template>
     <transition name="slide">
@@ -24,7 +24,7 @@
 
 <script>
     import { aspectRatioToWH } from "@/libs/util";
-    import { addCollection, removeCollection } from "@/libs/util";
+    import { addCollection, removeCollection, getTime, updDownDoneFiles } from "@/libs/util";
     import { getImgBlod } from "@/libs/ajax";
     import errimg from "@/assets/errimg.svg"
 
@@ -35,7 +35,7 @@
                 loading: false,
                 show: false,
                 path: '',
-                zoom: 0,
+                zoom: 0,// 缩放比 %
                 img: {
                     w: 0,
                     h: 0
@@ -55,14 +55,14 @@
                 deep: true,
                 handler(val) {
                     let { dimension_x, dimension_y, path, ratio } = val;
-                    this.ratio = parseFloat(ratio)
                     this.show = true;
-                    this.path = val.thumbs.original;
+                    this.path = val.thumbs.original;//先填充原图等比例的 略缩图
                     this.img = aspectRatioToWH(this.clientWidth - 100, this.clientHeight - 200, ratio, dimension_x, dimension_y)
                     this.originalW = dimension_x;
                     this.zoom = parseInt(this.img.w / dimension_x * 100)
                     this.minImg = { ...this.img }
                     this.loading = true;
+                    // 等待动画完成后
                     setTimeout(() => {
                         this.$refs.img.style.left = 'auto'
                         this.$refs.img.style.top = 'auto'
@@ -153,16 +153,15 @@
             // 下载
             handleDownFile(item = this.data) {
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-
                 if (/^blob:/.test(this.path)) {
                     const a = document.createElement("a")
                     a.href = this.path
                     a.download = `one-${id}${url.substr(url.lastIndexOf('.'))}`
                     a.click()
-                    setTimeout(() => {
-                        URL.revokeObjectURL(a.href)
-                        a.remove();
-                    }, 3000)
+                    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
+                    this.$message({ message: "下载成功", type: "success", duration: 2000 });
+                    this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime() })
+                    updDownDoneFiles(this.$root.downDoneFiles)
                 } else {
                     this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
                     this.$message({ message: "已加入下载", type: "success", duration: 2000 });
@@ -170,13 +169,8 @@
             },
             // 获取收藏状态
             getCollection(id) {
-                let index = -1;
-                if (this.$root.collections.length < 0) {
-                    return false;
-                } else {
-                    index = this.$root.collections.findIndex(item => id == item.id);
-                    return index !== -1;
-                }
+                let collections = this.$root.collections;
+                return collections.length > 0 && collections.findIndex(item => id == item.id) !== -1;
             },
         },
         directives: {

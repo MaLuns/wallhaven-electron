@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import '@/libs/use';
-import { getCollection, getDownFiles, updDownFiles, getTime } from "@/libs/util";
+import { getCollection, getTime, getDownFiles, getDownDoneFiles, updDownFiles, updDownDoneFiles } from "@/libs/util";
 import { downFile, updateDownState } from '@/libs/downfile'
 
 new Vue({
@@ -10,8 +10,8 @@ new Vue({
       //收藏
       collections: getCollection(),
       // 下载列表
-      downFiles: getDownFiles('DownFiles'),
-      downDoneFiles: getDownFiles('DownDoneFiles')
+      downFiles: getDownFiles(),
+      downDoneFiles: getDownDoneFiles()
     }
   },
   created() {
@@ -21,7 +21,7 @@ new Vue({
     downFiles: {
       deep: true,
       handler(val) {
-        updDownFiles('DownFiles', val)
+        updDownFiles(val)
       }
     }
   },
@@ -59,7 +59,7 @@ new Vue({
           if (progress === 100) {
             let { id, path, resolution, size, small, url } = data
             this.downDoneFiles.splice(0, 0, { id, path, resolution, size, small, url, downloadtime: getTime() })
-            updDownFiles('DownDoneFiles', this.downDoneFiles)
+            updDownDoneFiles(this.downDoneFiles)
 
             if (index > -1) this.downFiles.splice(index, 1)
           }
@@ -74,13 +74,13 @@ new Vue({
         let index = this.downFiles.findIndex(item => item.id === id);
         if (index > -1) {
           this.downFiles.splice(index, 1)
-          updDownFiles('DownFiles', this.downFiles);
+          updDownFiles(this.downFiles);
         }
       } else {
         let index = this.downDoneFiles.findIndex(item => item.id === id);
         if (index > -1) {
           this.downDoneFiles.splice(index, 1)
-          updDownFiles('DownDoneFiles', this.downDoneFiles);
+          updDownDoneFiles(this.downDoneFiles);
         }
       }
 

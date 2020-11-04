@@ -38,7 +38,7 @@
                 <li>下载</li>
                 <li>查看</li>
             </template>
-        </context-menu> -->
+        </context-menu>-->
     </ul>
 </template>
 
@@ -103,18 +103,12 @@
             // 移除收藏
             handleRemoveCollection(item) {
                 this.$root.removeCollection(removeCollection(item));
-
                 this.$message({ message: "取消收藏", type: "success", duration: 2000 });
             },
             // 获取收藏状态
             getCollection(id) {
-                let index = -1;
-                if (this.$root.collections.length < 0) {
-                    return false;
-                } else {
-                    index = this.$root.collections.findIndex(item => id == item.id);
-                    return index !== -1;
-                }
+                let collections = this.$root.collections;
+                return collections.length > 0 && collections.findIndex(item => id == item.id) !== -1;
             },
             //查看
             handleView(item) {

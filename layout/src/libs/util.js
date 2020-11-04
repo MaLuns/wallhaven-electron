@@ -1,3 +1,10 @@
+/*
+ * @Author: 白云苍狗 
+ * @Date: 2020-11-03 23:27:09 
+ * @Last Modified by: 白云苍狗
+ * @Last Modified time: 2020-11-03 23:34:00
+ */
+
 /**
  * 获取时间 yyyy-MM-dd hh:mm:ss
  */
@@ -8,17 +15,24 @@ export const getTime = () => {
 
 
 /**
- * 
- * @param {*} key 
- * @param {*} val 
+ * 获取 localStorage
+ * @param {*} key key
+ * @param {*} val 默认值
  */
-const getData = (key, val = []) => {
+export const getData = (key, val = []) => {
     let data = localStorage.getItem(key)
     if (data) {
         return JSON.parse(data)
     }
     return val;
 }
+
+/**
+ * 设置 localStorage
+ * @param {*} key key
+ * @param {*} val value
+ */
+export const setData = (key, val) => localStorage.setItem(key, JSON.stringify(val))
 
 /**
  * 添加收藏
@@ -59,23 +73,24 @@ export const removeCollection = (obj) => {
 /**
  * 获取下载数据
  */
-export const getDownFiles = (key) => getData(key);/* () => {
-    return getData("DownFiles").map(item => {
-        if (['paused', 'downing'].includes(item.state)) {
-            item.state = 'interrupted'
-        }
-        return item;
-    })
-} */
-
+export const getDownFiles = () => getData('DownFiles');
 
 /**
  * 更新下载列表
  * @param {*} arr 
  */
-export const updDownFiles = (key, arr) => localStorage.setItem(key, JSON.stringify(arr))
+export const updDownFiles = (arr) => setData('DownFiles', arr)
 
+/**
+ * 获取下载完成数据
+ */
+export const getDownDoneFiles = () => getData('DownDoneFiles');
 
+/**
+ * 更新下载完成列表
+ * @param {*} arr 
+ */
+export const updDownDoneFiles = (arr) => setData('DownDoneFiles', arr)
 
 /**
  * obj 转 url
