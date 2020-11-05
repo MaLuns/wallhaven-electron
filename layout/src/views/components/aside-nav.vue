@@ -88,7 +88,7 @@
     .nav {
         padding: 20px 30px;
         user-select: none;
-        -webkit-app-region: no-drag;
+        /*  -webkit-app-region: no-drag; */
 
         li {
             list-style: none;

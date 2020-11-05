@@ -63,7 +63,7 @@
             background-color: #201f2908;
             box-shadow: -10px 0 20px 0px #000000c4;
             color: #fff;
-            -webkit-app-region: drag;
+           /*  -webkit-app-region: drag; */
 
             .logo {
                 -webkit-app-region: no-drag;

@@ -214,7 +214,6 @@ const mainWindowIpcStart = function (win) {
 
     let noti
     const notification = (url) => {
-        console.log(url)
         noti = new Notification({
             title: "下载成功",
             bodyString: url,

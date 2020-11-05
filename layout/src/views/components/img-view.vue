@@ -2,7 +2,7 @@
  * @Author: 白云苍狗 
  * @Date: 2020-09-25 18:27:17 
  * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-04 20:27:53
+ * @Last Modified time: 2020-11-05 22:31:41
  */
 <template>
     <transition name="slide">
@@ -24,7 +24,7 @@
 
 <script>
     import { aspectRatioToWH } from "@/libs/util";
-    import { addCollection, removeCollection, getTime, updDownDoneFiles } from "@/libs/util";
+    import { getTime } from "@/libs/util";
     import { getImgBlod } from "@/libs/ajax";
     import errimg from "@/assets/errimg.svg"
 
@@ -134,7 +134,7 @@
             },
             // 添加收藏
             handleAddCollection(item) {
-                this.$root.AddCollection(addCollection(item));
+                this.$root.AddCollection(item);
                 this.$message({
                     message: "收藏成功",
                     type: "success",
@@ -143,7 +143,7 @@
             },
             // 移除收藏
             handleRemoveCollection(item) {
-                this.$root.removeCollection(removeCollection(item));
+                this.$root.removeCollection(item);
                 this.$message({
                     message: "取消收藏",
                     type: "success",
@@ -161,7 +161,6 @@
                     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
                     this.$message({ message: "下载成功", type: "success", duration: 2000 });
                     this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime() })
-                    updDownDoneFiles(this.$root.downDoneFiles)
                 } else {
                     this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
                     this.$message({ message: "已加入下载", type: "success", duration: 2000 });

@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import '@/libs/use';
-import { getCollection, getTime, getDownFiles, getDownDoneFiles, updDownFiles, updDownDoneFiles } from "@/libs/util";
+import { getTime, getImgCollection, updImgCollection, getDownFiles, getDownDoneFiles, updDownFiles, updDownDoneFiles } from "@/libs/util";
 import { downFile, updateDownState } from '@/libs/downfile'
 
 new Vue({
   data() {
     return {
       //收藏
-      collections: getCollection(),
+      collections: getImgCollection(),
       // 下载列表
       downFiles: getDownFiles(),
       downDoneFiles: getDownDoneFiles()
@@ -18,10 +18,22 @@ new Vue({
     updateDownState(this.updateDownState);
   },
   watch: {
+    collections: {
+      deep: true,
+      handler(val) {
+        updImgCollection(val)
+      }
+    },
     downFiles: {
       deep: true,
       handler(val) {
         updDownFiles(val)
+      }
+    },
+    downDoneFiles: {
+      deep: true,
+      handler(val) {
+        updDownDoneFiles(val)
       }
     }
   },
@@ -54,13 +66,10 @@ new Vue({
       this.$nextTick(() => {
         let { id, done, progress } = data;
         let index = this.downFiles.findIndex(item => item.id === id)
-
         if (done === 'end') {
           if (progress === 100) {
             let { id, path, resolution, size, small, url } = data
             this.downDoneFiles.splice(0, 0, { id, path, resolution, size, small, url, downloadtime: getTime() })
-            updDownDoneFiles(this.downDoneFiles)
-
             if (index > -1) this.downFiles.splice(index, 1)
           }
         } else {
@@ -74,13 +83,11 @@ new Vue({
         let index = this.downFiles.findIndex(item => item.id === id);
         if (index > -1) {
           this.downFiles.splice(index, 1)
-          updDownFiles(this.downFiles);
         }
       } else {
         let index = this.downDoneFiles.findIndex(item => item.id === id);
         if (index > -1) {
           this.downDoneFiles.splice(index, 1)
-          updDownDoneFiles(this.downDoneFiles);
         }
       }
 

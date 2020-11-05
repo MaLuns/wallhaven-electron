@@ -43,7 +43,6 @@
 </template>
 
 <script>
-    import { addCollection, removeCollection } from "@/libs/util";
     import errimg from "@/assets/errimg.svg"
 
     export default {
@@ -93,7 +92,7 @@
             },
             // 添加收藏
             handleAddCollection(item) {
-                this.$root.AddCollection(addCollection(item));
+                this.$root.AddCollection(item);
                 this.$message({
                     message: "收藏成功",
                     type: "success",
@@ -102,7 +101,7 @@
             },
             // 移除收藏
             handleRemoveCollection(item) {
-                this.$root.removeCollection(removeCollection(item));
+                this.$root.removeCollection(item);
                 this.$message({ message: "取消收藏", type: "success", duration: 2000 });
             },
             // 获取收藏状态
