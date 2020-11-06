@@ -2,20 +2,21 @@
  * @Author: 白云苍狗 
  * @Date: 2020-09-25 18:27:17 
  * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-10-10 19:15:46
+ * @Last Modified time: 2020-11-05 22:31:41
  */
 <template>
     <transition name="slide">
         <div v-if="show" class="animation-content">
-            <div class="img-view" ref="imgContent">
+            <div class="img-view" ref="imgContent" v-loading="loading">
                 <img @error="handleError" ref="img" draggable="false" v-dragwidth :width="img.w" :height="img.h" :src="path" />
-                <div class="btns">
-                    <div @click="handleClose" class="iconfont icon-guanbi"></div>
-                    <div class="iconfont icon-huifu" @click="handleRef"></div>
-                    <div class="iconfont icon-xiazai" @click="handleDownFile()"></div>
-                    <div v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
-                    <div v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
-                </div>
+                <div class="zoom-bage">{{zoom}}</div>
+            </div>
+            <div class="btns">
+                <div @click="handleClose" class="iconfont icon-guanbi"></div>
+                <div class="iconfont icon-huifu" @click="handleRef"></div>
+                <div class="iconfont icon-xiazai" @click="handleDownFile()"></div>
+                <div v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
+                <div v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
             </div>
         </div>
     </transition>
@@ -23,19 +24,22 @@
 
 <script>
     import { aspectRatioToWH } from "@/libs/util";
-    import { addCollection, removeCollection } from "@/libs/util";
+    import { getTime } from "@/libs/util";
+    import { getImgBlod } from "@/libs/ajax";
     import errimg from "@/assets/errimg.svg"
 
     export default {
         name: "ImgView",
         data() {
             return {
+                loading: false,
                 show: false,
                 path: '',
+                zoom: 0,// 缩放比 %
                 img: {
                     w: 0,
                     h: 0
-                }
+                },
             }
         },
         props: {
@@ -51,25 +55,40 @@
                 deep: true,
                 handler(val) {
                     let { dimension_x, dimension_y, path, ratio } = val;
-                    this.ratio = parseFloat(ratio)
                     this.show = true;
-                    this.path = path;
-                    this.img = { w: 0, h: 0 }
-
+                    this.path = val.thumbs.original;//先填充原图等比例的 略缩图
+                    this.img = aspectRatioToWH(this.clientWidth - 100, this.clientHeight - 200, ratio, dimension_x, dimension_y)
+                    this.originalW = dimension_x;
+                    this.zoom = parseInt(this.img.w / dimension_x * 100)
+                    this.minImg = { ...this.img }
+                    this.loading = true;
+                    // 等待动画完成后
                     setTimeout(() => {
                         this.$refs.img.style.left = 'auto'
                         this.$refs.img.style.top = 'auto'
-                        this.clientWidth = this.$refs.imgContent.clientWidth;
-                        this.clientHeight = this.$refs.imgContent.clientHeight;
-                        this.img = aspectRatioToWH(this.clientWidth - 100, this.clientHeight - 200, ratio, dimension_x, dimension_y)
-                        this.minImg = { ...this.img }
                         this.$refs.imgContent.addEventListener("wheel", this.setImgWH);
                     }, 800);
+
+                    // 获取原始图片
+                    getImgBlod(path).then(res => {
+                        this.path = res;
+                        this.img = aspectRatioToWH(this.clientWidth - 100, this.clientHeight - 200, ratio, dimension_x, dimension_y)
+                        this.loading = false;
+                    }).catch(res => {
+                        //this.$message.error('图片加载失败')
+                        console.log(res)
+                        this.loading = false;
+                    })
                 }
             }
         },
-        mounted() { },
+        mounted() {
+            let { height, width } = document.documentElement.getBoundingClientRect()
+            this.clientWidth = width;
+            this.clientHeight = height;
+        },
         methods: {
+            //还原位置
             handleRef() {
                 this.$refs.img.style.left = 'auto'
                 this.$refs.img.style.top = 'auto'
@@ -77,32 +96,37 @@
             },
             // 图片加载失败
             handleError() {
-                this.$message.error('图片加载失败')
                 this.path = errimg;
+                this.img = { w: 600, h: 600 }
             },
             // 获取等比高度
             setImgWH(e) {
-                let oX = this.$refs.img.offsetLeft + this.img.w / 2
-                let oY = this.$refs.img.offsetTop + this.img.h / 2
+                let img = this.$refs.img;
+                if (img) {
+                    let oX = img.offsetLeft + this.img.w / 2
+                    let oY = img.offsetTop + this.img.h / 2
 
-                if (e.wheelDeltaY > 0) {
-                    this.img.w += this.img.w * 0.1
-                    this.img.h += this.img.h * 0.1
-                } else {
-                    this.img.w -= this.img.w * 0.1
-                    this.img.h -= this.img.h * 0.1
+                    if (e.wheelDeltaY > 0) {
+                        this.img.w += this.img.w * 0.1
+                        this.img.h += this.img.h * 0.1
+                    } else {
+                        this.img.w -= this.img.w * 0.1
+                        this.img.h -= this.img.h * 0.1
+                    }
+
+                    if (this.img.w < this.minImg.w) {
+                        this.img.w = this.minImg.w;
+                    }
+
+                    if (this.img.h < this.minImg.h) {
+                        this.img.h = this.minImg.h;
+                    }
+
+                    img.style.left = (oX - this.img.w / 2) + 'px'
+                    img.style.top = (oY - this.img.h / 2) + 'px'
+
+                    this.zoom = parseInt(this.img.w / this.originalW * 100)
                 }
-
-                if (this.img.w < this.minImg.w) {
-                    this.img.w = this.minImg.w;
-                }
-
-                if (this.img.h < this.minImg.h) {
-                    this.img.h = this.minImg.h;
-                }
-
-                this.$refs.img.style.left = (oX - this.img.w / 2) + 'px'
-                this.$refs.img.style.top = (oY - this.img.h / 2) + 'px'
             },
             // 关闭
             handleClose() {
@@ -110,7 +134,7 @@
             },
             // 添加收藏
             handleAddCollection(item) {
-                this.$root.AddCollection(addCollection(item));
+                this.$root.AddCollection(item);
                 this.$message({
                     message: "收藏成功",
                     type: "success",
@@ -119,7 +143,7 @@
             },
             // 移除收藏
             handleRemoveCollection(item) {
-                this.$root.removeCollection(removeCollection(item));
+                this.$root.removeCollection(item);
                 this.$message({
                     message: "取消收藏",
                     type: "success",
@@ -129,18 +153,23 @@
             // 下载
             handleDownFile(item = this.data) {
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-                this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
-                this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+                if (/^blob:/.test(this.path)) {
+                    const a = document.createElement("a")
+                    a.href = this.path
+                    a.download = `one-${id}${url.substr(url.lastIndexOf('.'))}`
+                    a.click()
+                    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
+                    this.$message({ message: "下载成功", type: "success", duration: 2000 });
+                    this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime() })
+                } else {
+                    this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
+                    this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+                }
             },
             // 获取收藏状态
             getCollection(id) {
-                let index = -1;
-                if (this.$root.collections.length < 0) {
-                    return false;
-                } else {
-                    index = this.$root.collections.findIndex(item => id == item.id);
-                    return index !== -1;
-                }
+                let collections = this.$root.collections;
+                return collections.length > 0 && collections.findIndex(item => id == item.id) !== -1;
             },
         },
         directives: {
@@ -209,30 +238,41 @@
                 position: absolute;
             }
 
-            .btns {
+            .zoom-bage {
                 position: absolute;
-                right: 20px;
-                bottom: 30px;
-                color: #ffffff9e;
+                right: 0px;
+                bottom: 10px;
+                font-size: 14px;
+                color: #fff;
+                width: 88px;
+                text-align: center;
+            }
+        }
 
-                div {
-                    margin: 10px 0;
-                    padding: 16px;
-                    border-radius: 50%;
-                    transition: all 0.3s ease;
-                    background: #0016484f;
-                    cursor: url(../../assets/cursor.png), auto !important;
+        .btns {
+            position: absolute;
+            right: 20px;
+            top: 610px;
+            color: #ffffff9e;
+            z-index: 9999;
 
+            div {
+                margin: 10px 0;
+                padding: 16px;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                background: #0016484f;
+                cursor: url(../../assets/cursor.png), auto !important;
+
+                &:hover {
+                    background: #38acfa;
+                    color: #ffffff;
+                }
+
+                &.shoucang {
+                    color: #38acfa;
                     &:hover {
-                        background: #38acfa;
                         color: #ffffff;
-                    }
-
-                    &.shoucang {
-                        color: #38acfa;
-                        &:hover {
-                            color: #ffffff;
-                        }
                     }
                 }
             }

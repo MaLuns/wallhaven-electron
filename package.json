@@ -4,9 +4,9 @@
   "description": "one-wallhaven 壁纸程序",
   "main": "./src/main/index.js",
   "scripts": {
-    "serve:web": "vue-cli-service serve",
+    "dev:web": "vue-cli-service serve",
+    "dev:exe": "./node_modules/.bin/electron ./",
     "build:web": "vue-cli-service build ",
-    "serve:exe": "./node_modules/.bin/electron ./",
     "build:exe": "./node_modules/.bin/electron-builder build"
   },
   "keywords": [],

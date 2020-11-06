@@ -117,8 +117,9 @@ const mainWindowIpcStart = function (win) {
         try {
 
             const url = item.getURL()
-            let cacheItem = cacheDownItem[url];
-
+            let cacheItem = cacheDownItem[url] || {
+                notSend: true
+            };
             // 获取文件的总大小
             const totalBytes = item.getTotalBytes();
             // 设置下载路径
@@ -152,30 +153,34 @@ const mainWindowIpcStart = function (win) {
                         lastBytes = offset
                     }
                 }
-                win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)));
+                !cacheItem.notSend && win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)));
             })
 
-            // 
+            // 下载完成
             item.once('done', (event, state) => {
-                if (state === 'interrupted') {
-                    cacheItem.state = 'interrupted-err'
-                }
-                else if (state === 'cancelle') {
-                    cacheItem.state = 'cancelle'
-                }
-                else {
-                    cacheItem.state = 'completed'
-                }
                 cacheItem.done = 'end'
-                win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)))
-                if (state === 'completed') {
-                    notification(cacheItem.path)
+                switch (state) {
+                    case 'interrupted':
+                        cacheItem.state = 'interrupted-err'
+                        break;
+                    case 'cancelle':
+                        cacheItem.state = 'cancelle'
+                        break;
+                    default:
+                        cacheItem.state = 'completed'
+                        notification(cacheItem.path)
+                        break;
                 }
+
+                !cacheItem.notSend && win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)))
+
                 //删除缓存
                 delete cacheDownItem[url]
+                cacheItem = null;
                 item = null;
             })
 
+            // 恢复
             if (item.canResume) {
                 item.resume()
             }
@@ -209,7 +214,6 @@ const mainWindowIpcStart = function (win) {
 
     let noti
     const notification = (url) => {
-        console.log(url)
         noti = new Notification({
             title: "下载成功",
             bodyString: url,

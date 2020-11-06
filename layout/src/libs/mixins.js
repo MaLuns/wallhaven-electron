@@ -1,3 +1,11 @@
+/*
+ * @Author: 白云苍狗 
+ * @Date: 2020-11-05 22:05:14 
+ * @Last Modified by:   白云苍狗 
+ * @Last Modified time: 2020-11-05 22:05:14 
+ */
+
+
 import ajax from "@/libs/ajax";
 import { objToUrl } from "@/libs/util";
 //数据查询

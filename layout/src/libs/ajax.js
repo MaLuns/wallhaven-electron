@@ -1,4 +1,9 @@
-
+/*
+ * @Author: 白云苍狗 
+ * @Date: 2020-11-05 22:05:45 
+ * @Last Modified by:   白云苍狗 
+ * @Last Modified time: 2020-11-05 22:05:45 
+ */
 
 const baseURL = process.env.NODE_ENV === 'production' ? "https://wallhaven.cc/api/v1/" : "https://wallhaven.cc/api/v1/";
 
@@ -24,6 +29,43 @@ const ajax = (url) => {
     })
 }
 
+/**
+ * 获取图片数据
+ * @param {*} url 文件地址
+ * @param {*} timeout 超时时间
+ */
+export const getImgBlod = (url, timeout = 60000) => {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
 
+        let timedout = false;
+        let timer = setTimeout(function () {
+            timedout = true;
+            xhr.abort();
+            reject('连接超时！！！')
+        }, timeout);
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return;
+            if (timedout) { return; }
+            clearTimeout(timer);
+            if (xhr.status === 200 || xhr.status === 304) {
+                try {
+                    let blob = this.response;
+                    resolve(window.URL.createObjectURL(blob));
+                }
+                catch (error) {
+                    reject(xhr.responseText);
+                }
+            } else {
+                reject(new Error(xhr.responseText));
+            }
+        };
+        xhr.send();
+    })
+}
 
 export default ajax;

@@ -1,3 +1,10 @@
+/*
+ * @Author: 白云苍狗 
+ * @Date: 2020-11-03 23:27:09 
+ * @Last Modified by: 白云苍狗
+ * @Last Modified time: 2020-11-05 22:32:40
+ */
+
 /**
  * 获取时间 yyyy-MM-dd hh:mm:ss
  */
@@ -8,11 +15,38 @@ export const getTime = () => {
 
 
 /**
- * 
- * @param {*} key 
- * @param {*} val 
+ * 存储单位换算
+ * @param {*} bytes  
  */
-const getData = (key, val = []) => {
+export const byte = (bytes) => {
+    if (bytes === 0) return '0 B';
+    var k = 1000, // or 1024
+        sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+}
+
+
+/**
+ * 防抖
+ * @param {*} fn 
+ * @param {*} wait 延迟时间 默认1秒
+ */
+export const debounce = (fn, wait = 1000) => {
+    let timeout = null;
+    return function () {
+        if (timeout !== null) clearTimeout(timeout);
+        timeout = setTimeout(fn, wait);
+    }
+}
+
+/**
+ * 获取 localStorage
+ * @param {*} key key
+ * @param {*} val 默认值
+ */
+export const getData = (key, val = []) => {
     let data = localStorage.getItem(key)
     if (data) {
         return JSON.parse(data)
@@ -21,60 +55,48 @@ const getData = (key, val = []) => {
 }
 
 /**
- * 添加收藏
- * @param {*} obj 
+ * 设置 localStorage
+ * @param {*} key key
+ * @param {*} val value
  */
-export const addCollection = (obj) => {
-    let collections = JSON.parse(localStorage.getItem("ImgCollection")) || []
-    let index = collections.findIndex(item => item.id === obj.id);
-    if (index < 0) {
-        collections.push(obj)
-        localStorage.setItem("ImgCollection", JSON.stringify(collections))
-        return obj
-    } else {
-        return null
-    }
-}
+export const setData = (key, val) => localStorage.setItem(key, JSON.stringify(val))
+
 
 /**
- * 获取收藏
- * @param {*} obj 
+ * 获取收藏数据
  */
-export const getCollection = () => getData('ImgCollection')
+export const getImgCollection = () => getData('ImgCollection');
 
 /**
- * 删除收藏
- * @param {*} obj 
+ * 更新收藏列表
+ * @param {*} arr 
  */
-export const removeCollection = (obj) => {
-    let collections = JSON.parse(localStorage.getItem("ImgCollection")) || []
-    let index = collections.findIndex(item => item.id === obj.id);
-    if (index > -1) {
-        collections.splice(index, 1)
-        localStorage.setItem("ImgCollection", JSON.stringify(collections))
-    }
-    return obj
-}
+export const updImgCollection = (arr) => setData('ImgCollection', arr)
+
 
 /**
  * 获取下载数据
  */
-export const getDownFiles = (key) => getData(key);/* () => {
-    return getData("DownFiles").map(item => {
-        if (['paused', 'downing'].includes(item.state)) {
-            item.state = 'interrupted'
-        }
-        return item;
-    })
-} */
-
+export const getDownFiles = () => getData('DownFiles');
 
 /**
  * 更新下载列表
  * @param {*} arr 
  */
-export const updDownFiles = (key, arr) => localStorage.setItem(key, JSON.stringify(arr))
+const _updDownFiles = debounce(setData, 1000)
+export const updDownFiles = (arr) => _updDownFiles('DownFiles', arr)
 
+/**
+ * 获取下载完成数据
+ */
+export const getDownDoneFiles = () => getData('DownDoneFiles');
+
+/**
+ * 更新下载完成列表
+ * @param {*} arr 
+ */
+const _updDownDoneFiles = debounce(setData, 1000)
+export const updDownDoneFiles = (arr) => _updDownDoneFiles('DownDoneFiles', arr)
 
 
 /**
