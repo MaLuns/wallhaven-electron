@@ -13,8 +13,8 @@
 yarn
 
 # 运行开发模式
-npm run serve:web
-npm run serve:exe
+npm run dev:web
+npm run dev:exe
 
 # 打包安装文件 
 npm run build:web
