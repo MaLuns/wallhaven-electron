@@ -222,7 +222,7 @@ const mainWindowIpcStart = function (win) {
         })
         noti.show()
         noti.once("click", () => {
-            shell.openPath(url)
+            shell.showItemInFolder(url)
         })
 
     }
