@@ -35,9 +35,11 @@ export const byte = (bytes) => {
  */
 export const debounce = (fn, wait = 1000) => {
     let timeout = null;
-    return function () {
+    return function (key, val) {
         if (timeout !== null) clearTimeout(timeout);
-        timeout = setTimeout(fn, wait);
+        timeout = setTimeout(() => {
+            fn(key, val);
+        }, wait);
     }
 }
 
@@ -84,7 +86,9 @@ export const getDownFiles = () => getData('DownFiles');
  * @param {*} arr 
  */
 const _updDownFiles = debounce(setData, 1000)
-export const updDownFiles = (arr) => _updDownFiles('DownFiles', arr)
+export const updDownFiles = (arr) => {
+    _updDownFiles('DownFiles', arr)
+}
 
 /**
  * 获取下载完成数据

@@ -2,7 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import '@/libs/use';
 import { getTime, getImgCollection, updImgCollection, getDownFiles, getDownDoneFiles, updDownFiles, updDownDoneFiles } from "@/libs/util";
-import { downFile, updateDownState } from '@/libs/downfile'
+import { downFile, updateDownState, initPath } from '@/libs/downfile'
+// 初始化下载目录
+initPath()
 
 new Vue({
   data() {
