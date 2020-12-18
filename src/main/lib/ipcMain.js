@@ -1,5 +1,6 @@
-const { app, ipcMain, session, Notification, shell, DownloadItem } = require('electron');
+const { app, ipcMain, session, Notification, shell, DownloadItem, dialog } = require('electron');
 const path = require("path")
+const fs = require('fs');
 
 
 //缓存下载项
@@ -39,6 +40,36 @@ const mainWindowIpcStart = function (win) {
         win.close();
     })
 
+    // 设置下载路径
+    ipcMain.on("set_path", function (e, data = {}) {
+        let { path } = data
+        if (path) {
+            if (path !== 'not') app.setPath('downloads', path);
+            e.reply('set_path', app.getPath('downloads'));
+        } else {
+            dialog.showOpenDialog({
+                title: '选择下载目录',
+                defaultPath: app.getPath('downloads'),
+                properties: ['openDirectory']
+            }).then((files) => {
+                if (!files.canceled) {// 如果有选中
+                    app.setPath('downloads', files.filePaths[0])
+                }
+                e.reply('set_path', files)
+            })
+        }
+    })
+
+    // 设置下载路径
+    ipcMain.on("check_path", function (e, data = {}) {
+        let { path } = data
+        fs.access(path, fs.constants.F_OK, (err) => {
+            if (!err) {
+                shell.showItemInFolder(path)
+            }
+            e.reply('check_path' + path, err);
+        });
+    })
 
     // 下载
     ipcMain.on("down-file", function (e, data) {

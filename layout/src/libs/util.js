@@ -87,7 +87,6 @@ export const getDownFiles = () => getData('DownFiles');
  */
 const _updDownFiles = debounce(setData, 1000)
 export const updDownFiles = (arr) => {
-    console.log(arr)
     _updDownFiles('DownFiles', arr)
 }
 

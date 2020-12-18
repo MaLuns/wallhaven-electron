@@ -71,3 +71,16 @@ export const nextresume = (obj) => {
         ipcRenderer.once(`resume-download-${obj.id}`, (e, data) => resolve(data))
     })
 }
+
+
+/**
+ * 初始化下载地址
+ * @param {*} path 下载路径
+ */
+export const initPath = () => {
+    let path = localStorage.getItem('downloads') || 'not';
+    ipcRenderer.send('set_path', { path })
+    ipcRenderer.once(`set_path`, (e, data) => {
+        localStorage.setItem('downloads', data)
+    })
+}
