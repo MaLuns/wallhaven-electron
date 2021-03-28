@@ -19,8 +19,8 @@ if (!gotTheLock) {
         const win = new BrowserWindow({
             width: 1580,
             height: 888,
-            resizable: false,
-            useContentSize: true,
+            //resizable: false,
+            //useContentSize: true,
             /* transparent: true, */
             icon: path.resolve(__dirname, "./icon/logo.png"),
             frame: false,
@@ -28,10 +28,12 @@ if (!gotTheLock) {
             webPreferences: {
                 webSecurity: false,
                 nodeIntegration: true,
+                contextIsolation: false,
                 webviewTag: true
             }
         })
         /* win.maximize(); */
+        console.log(app.isPackaged)
         if (app.isPackaged) {
             win.loadURL(`file://${winURL}`)
         } else {

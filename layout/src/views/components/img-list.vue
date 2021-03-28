@@ -136,7 +136,7 @@
         list-style: none;
         padding-left: 20px;
         overflow-y: auto;
-
+        text-align: center;
         li {
             margin: 10px;
             width: 300px;

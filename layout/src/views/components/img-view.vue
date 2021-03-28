@@ -252,7 +252,8 @@
         .btns {
             position: absolute;
             right: 20px;
-            top: 610px;
+            top: 50vh;
+            transform: translateY(-50%);
             color: #ffffff9e;
             z-index: 9999;
 
