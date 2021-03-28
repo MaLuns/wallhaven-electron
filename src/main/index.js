@@ -33,7 +33,7 @@ if (!gotTheLock) {
             }
         })
         /* win.maximize(); */
-        console.log(app.isPackaged)
+        // console.log(app.isPackaged)
         if (app.isPackaged) {
             win.loadURL(`file://${winURL}`)
         } else {

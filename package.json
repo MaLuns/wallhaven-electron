@@ -54,6 +54,9 @@
     },
     "win": {
       "icon": "./build/logo256x256.ico"
+    },
+    "mac": {
+      "icon": "./build/logo512x512.ico"
     }
   }
 }
