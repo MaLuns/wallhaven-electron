@@ -12,7 +12,7 @@
 # 安装依赖
 yarn
 
-# 运行开发模式
+# 运行开发模式 （注意这里需要两个都跑起来)
 npm run dev:web
 npm run dev:exe
 
