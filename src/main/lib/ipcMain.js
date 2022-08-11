@@ -194,8 +194,8 @@ const mainWindowIpcStart = function (win) {
                     case 'interrupted':
                         cacheItem.state = 'interrupted-err'
                         break;
-                    case 'cancelle':
-                        cacheItem.state = 'cancelle'
+                    case 'cancelled':
+                        cacheItem.state = 'cancelled'
                         break;
                     default:
                         cacheItem.state = 'completed'

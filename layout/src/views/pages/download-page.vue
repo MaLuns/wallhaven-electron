@@ -126,7 +126,7 @@
         },
         filters: {
             state(val) {
-                if (['cancelle', 'interrupted-err'].includes(val)) {
+                if (['cancelled', 'interrupted-err'].includes(val)) {
                     return 'exception'
                 }
                 // 暂停 - 或者可恢复
