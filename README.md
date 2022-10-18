@@ -39,6 +39,10 @@ npm run build:exe
 <img src="https://pan.bilnn.com/api/v3/file/sourcejump/YdZXiv/kkjnhlZeH2P0XOPHaMgUYA**" alt="收藏" />
 <img src="https://pan.bilnn.com/api/v3/file/sourcejump/B3P4U2/o8_yKHJCTDywb0bQ-VJinQ**" alt="下载" />
 
+## 小程序版
+
+<img src="https://img.lkxin.cn/tu/2022/10/18/634e537320ee3.jpg" alt="小程序码" />
+
 ## Api
 [wallhaven.cc](https://wallhaven.cc/help/api)
 
