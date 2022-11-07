@@ -97,6 +97,7 @@
             color: #c6c6c6;
             font-size: 14px;
             position: relative;
+            transition: all .3s;
 
             .nav-title {
                 color: #ffffff75;
@@ -111,6 +112,7 @@
                 display: inline-block;
                 padding: 0 10px;
                 margin: 0 18px;
+                cursor: pointer;
 
                 &::before {
                     content: "";

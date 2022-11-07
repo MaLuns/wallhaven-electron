@@ -36,6 +36,7 @@ export default {
                         let { data, meta } = res;
                         if (this.page === 2) {
                             this.list = Object.freeze(data)
+                            this.getlist()
                         } else {
                             this.list = Object.freeze(this.list.concat(...data));
                         }

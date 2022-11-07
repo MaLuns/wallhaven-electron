@@ -4,11 +4,6 @@
     user-select          : none !important;
     -webkit-touch-callout: none !important;
     -webkit-user-select  : none !important;
-    cursor               : url(../assets/cursor.png), auto !important;
-}
-
-img {
-    cursor: url(../assets/img-cursor.png), auto !important;
 }
 
 body {
@@ -16,14 +11,14 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width : 6px;
+    width : 8px;
     height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background   : url(https://w.wallhaven.cc/full/2e/wallhaven-2erpym.jpg);
     filter       : blur(10px);
+    background   : #979fda40;
 }
 
 
@@ -34,6 +29,7 @@ body {
     right    : 0;
     margin   : 0 auto;
     width    : fit-content;
+    top      : 80px !important;
 }
 
 .el-message--success {
@@ -51,8 +47,7 @@ body {
 
 @bgColor: #201f29;
 @bgTheme: rgba(0, 0, 0, 0.623);
-;
-@color : #eee;
+@color  : #eee;
 
 .el-checkbox-group {
     box-shadow   : 0 0 15px 0 rgba(0, 0, 0, 0.5);

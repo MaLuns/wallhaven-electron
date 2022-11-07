@@ -35,7 +35,6 @@
         color: #e4e4e4;
         letter-spacing: 2px;
         font-weight: bold;
-        cursor: url(../../assets/cursor.png);
 
         .opt-btn {
             font-size: 14px;

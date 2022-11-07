@@ -17,14 +17,16 @@
                         <img @error="handleError" loading="lazy" draggable="false" :src="item.thumbs.small" @click="handleView(item)" />
                         <div class="img-info">
                             <span>{{ item.file_size | byte }}</span>
+                            <span>{{item.resolution}}</span>
                             <span>{{ item.file_type }}</span>
                         </div>
                     </div>
                     <div class="desc">
-                        <span :key="item.id+'cxx'" v-if="getCollection(item.id)" @click="handleRemoveCollection(item)" class="iconfont icon-collection-b shoucang"></span>
-                        <span :key="item.id+'cx'" v-else @click="handleAddCollection(item)" class="iconfont icon-collection-b"></span>
-                        <span>{{item.resolution}}</span>
-                        <span @click="handleDownFile(item)">下载</span>
+                        <span title="取消收藏" :key="item.id+'cxx'" v-if="getCollection(item.id)" @click="handleRemoveCollection(item)" class="iconfont icon-collection-b shoucang"></span>
+                        <span title="收藏" :key="item.id+'cx'" v-else @click="handleAddCollection(item)" class="iconfont icon-collection-b"></span>
+                        <!-- <span>{{item.resolution}}</span> -->
+                        <span title="设为壁纸" class="iconfont icon-tupian" @click="handleDownFile(item, true)"></span>
+                        <span title="下载" class="iconfont icon-xiazai" @click="handleDownFile(item)"></span>
                     </div>
                 </li>
             </template>
@@ -86,7 +88,7 @@
             handlerScroll(e) {
                 let { scrollHeight, clientHeight, scrollTop } = e.target;
                 this.scrollTop = scrollTop
-                if (scrollHeight < scrollTop + clientHeight + 500) {
+                if (scrollHeight < scrollTop + clientHeight + 800) {
                     this.$emit("next");
                 }
             },
@@ -114,10 +116,10 @@
                 this.$root.$emit("imgview", { ...item })
             },
             // 下载
-            handleDownFile(item) {
+            handleDownFile(item, isSetWallpaper = false) {
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-                this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
-                this.$message({ message: "已加入下载", type: "success", duration: 2000 });
+                this.$root.addDownFile({ id, url, size, resolution, small, _img: item, isSetWallpaper })
+                this.$message({ message: isSetWallpaper ? "壁纸设置中... ":"已加入下载", type: "success", duration: 2000 });
             },
             openMenu(e, data) {
                 this.menuOffset.offsetLeft = this.$el.getBoundingClientRect().left // container margin left
@@ -210,6 +212,10 @@
                 padding: 0 10px;
                 display: flex;
                 justify-content: space-between;
+
+                span {
+                    cursor: pointer;
+                }
 
                 .shoucang {
                     color: #38acfa;

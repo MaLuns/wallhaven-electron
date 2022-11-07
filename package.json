@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "element-ui": "^2.13.2",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "wallpaper": "^5.0.1"
   },
   "devDependencies": {
     "@vue/cli-service": "^4.5.0",

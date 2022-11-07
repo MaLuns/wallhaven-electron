@@ -7,18 +7,19 @@
             </div>
             <div class="btns">
                 <div @click="handleClose" class="iconfont icon-guanbi"></div>
-                <div class="iconfont icon-huifu" @click="handleRef"></div>
-                <div class="iconfont icon-xiazai" @click="handleDownFile()"></div>
-                <div v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
-                <div v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
+                <div title="还原" class="iconfont icon-huifu" @click="handleRef"></div>
+                <div title="下载" class="iconfont icon-xiazai" @click="handleDownFile()"></div>
+                <div title="设为壁纸" class="iconfont icon-tupian" @click="handleSetwallpaper()"></div>
+                <div title="取消收藏" v-if="getCollection(data.id)" @click="handleRemoveCollection(data)" class="iconfont icon-collection-b shoucang"></div>
+                <div title="收藏" v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
             </div>
         </div>
     </transition>
 </template>
 
 <script>
-    import { aspectRatioToWH } from "@/libs/util";
-    import { getTime } from "@/libs/util";
+    import { aspectRatioToWH, getTime } from "@/libs/util";
+    import { setWallpaper } from "@/libs/downfile";
     import { getImgBlod } from "@/libs/ajax";
     import errimg from "@/assets/errimg.svg"
 
@@ -144,19 +145,30 @@
                     duration: 2000
                 });
             },
+            handleSetwallpaper() {
+                this.handleDownFile(this.data, true);
+            },
             // 下载
-            handleDownFile(item = this.data) {
+            handleDownFile(item = this.data, isSetWallpaper = false) {
                 let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
                 if (/^blob:/.test(this.path)) {
+                    const downPath = localStorage.getItem('downloads');
+                    const name = `one-${id}${url.substr(url.lastIndexOf('.'))}`;
                     const a = document.createElement("a")
                     a.href = this.path
-                    a.download = `one-${id}${url.substr(url.lastIndexOf('.'))}`
+                    a.download = name
                     a.click()
                     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
-                    this.$message({ message: "下载成功", type: "success", duration: 2000 });
-                    this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime() })
+                    const path =  downPath + '\\' + name
+                    this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime() , path })
+                    if (isSetWallpaper) {
+                        setWallpaper(path)
+                        this.$message({ message: "设置成功", type: "success", duration: 2000 });
+                    } else {
+                        this.$message({ message: "下载成功", type: "success", duration: 2000 });
+                    }
                 } else {
-                    this.$root.addDownFile({ id, url, size, resolution, small, _img: item })
+                    this.$root.addDownFile({ id, url, size, resolution, small, _img: item, isSetWallpaper })
                     this.$message({ message: "已加入下载", type: "success", duration: 2000 });
                 }
             },
@@ -211,6 +223,7 @@
 
 <style lang="less" scoped>
     .animation-content {
+        background: rgba(0, 0, 0, 0.363);
         position: fixed;
         width: 100vw;
         height: 100vw;
@@ -255,9 +268,9 @@
                 margin: 10px 0;
                 padding: 16px;
                 border-radius: 50%;
-                transition: all 0.3s ease;
+                transition: all 0.2s;
+                cursor: pointer;
                 background: #0016484f;
-                cursor: url(../../assets/cursor.png), auto !important;
 
                 &:hover {
                     background: #38acfa;
@@ -275,10 +288,10 @@
     }
 
     .slide-enter-active {
-        transition: all 0.5s, border-radius 0.8s 0.3s;
+        transition: all 0.5s, border-radius 0.6s 0.3s;
     }
     .slide-leave-active {
-        transition: all 0.8s;
+        transition: all 0.6s;
     }
 
     .slide-enter,
@@ -287,7 +300,6 @@
         border-radius: 0 0 100vw 0;
         width: 10px;
         height: 10px;
-        background: #000;
     }
 
     .slide-leave-to {

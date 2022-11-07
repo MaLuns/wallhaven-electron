@@ -1,4 +1,5 @@
 const { app, ipcMain, session, Notification, shell, DownloadItem, dialog } = require('electron');
+const wallpaper = require('wallpaper');
 const path = require("path")
 const fs = require('fs');
 
@@ -127,6 +128,17 @@ const mainWindowIpcStart = function (win) {
         e.reply("down-file-resume-" + url, '已恢复下载')
     })
 
+    // 设置壁纸
+    ipcMain.on('set-wallpaper', function (e, data) {
+        let { path } = data
+        setWallpaper(path)
+    })
+
+
+    const setWallpaper = (path) => {
+        wallpaper.set(path)
+    }
+
     // 下载文件
     const downfile = (url) => {
         session.defaultSession.downloadURL(url)
@@ -204,6 +216,10 @@ const mainWindowIpcStart = function (win) {
                 }
 
                 !cacheItem.notSend && win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)))
+
+                if (cacheItem.isSetWallpaper) {
+                    setWallpaper(cacheItem.path)
+                }
 
                 //删除缓存
                 delete cacheDownItem[url]

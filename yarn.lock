@@ -7474,6 +7474,11 @@ vue@^2.6.11:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.12.tgz"
   integrity sha1-9evU+mvShpQD4pqJau1JBEVskSM=
 
+wallpaper@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmmirror.com/wallpaper/-/wallpaper-5.0.1.tgz#b1b51a1151762b401037ce76537e529eafe5474f"
+  integrity sha512-yB9sBVfosR+NVabo/Ej21hga5u55NQUUdDVoo4LwrLJDRA+ezzX4wmNGwl5yxx/fkBgTADMqLL8ldnfN8TI9hQ==
+
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/watchpack-chokidar2/download/watchpack-chokidar2-2.0.0.tgz"

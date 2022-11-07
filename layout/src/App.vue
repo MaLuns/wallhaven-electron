@@ -112,20 +112,6 @@
             z-index: -1;
             transition: background 0.8s;
 
-            &.CollectionPage,
-            &.PeoplePage {
-                background-image: url(./assets/people-bg.png);
-            }
-
-            &.HotPage,
-            &.DownloadPage {
-                background-image: url(./assets/down-bg.jpg);
-            }
-
-            &.AcgPage,
-            &.AboutPage {
-                background-image: url(./assets/sc-bg.png);
-            }
             &::before {
                 content: "";
                 position: absolute;
@@ -140,13 +126,13 @@
 
     .slide-fade-leave-active,
     .slide-fade-enter-active {
-        transition: all 0.8s ease;
+        transition: all 0.4s;
     }
 
     .slide-fade-enter,
     .slide-fade-leave-to {
         overflow: hidden;
-        transform: scale(0.1) translateY(-600px);
+        transform: scale(0.6) translateY(100px);
         opacity: 0;
     }
 

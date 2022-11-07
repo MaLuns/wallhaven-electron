@@ -3,6 +3,7 @@
         <el-checkbox-group v-model="search.purity" class="mgr10">
             <el-checkbox-button label="SFW">SFW</el-checkbox-button>
             <el-checkbox-button label="Sketchy">Sketchy</el-checkbox-button>
+            <!-- <el-checkbox-button label="NSFW">NSFW</el-checkbox-button> -->
         </el-checkbox-group>
         <el-select v-model="search.sorting" placeholder="请选择" style="width:100px" class="mgr10">
             <el-option label="最新" value="date_added"></el-option>

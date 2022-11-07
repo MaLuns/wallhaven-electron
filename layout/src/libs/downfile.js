@@ -76,3 +76,15 @@ export const initPath = () => {
         localStorage.setItem('downloads', data)
     })
 }
+
+/**
+ * 设置壁纸
+ * @param {*} path 
+ * @param {*} cb 
+ */
+export const setWallpaper = (path, cb) => {
+    ipcRenderer.send('set-wallpaper', { path })
+    ipcRenderer.once(`set-wallpaper`, (e, data) => {
+        if (Object.prototype.toString.call(cb) === '[object Function]') cb();
+    })
+}
