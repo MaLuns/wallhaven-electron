@@ -1,9 +1,3 @@
-/* 空页面
- * @Author: 白云苍狗 
- * @Date: 2020-09-23 20:25:30 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-09-27 22:54:21
- */
 <template>
     <div class="empty">
         <img :src="empty" alt draggable="false" />

@@ -1,9 +1,3 @@
-/*
- * @Author: 白云苍狗 
- * @Date: 2020-11-01 22:47:18 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-01 23:20:58
- */
 <template>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
         <slot name="menuItem"></slot>

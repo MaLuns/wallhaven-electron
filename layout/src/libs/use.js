@@ -1,10 +1,3 @@
-/* Vue 全局属性等初始化
- * @Author: 白云苍狗 
- * @Date: 2020-09-24 22:55:57 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-05 22:04:43
- */
-
 import Vue from 'vue';
 import { Message, Select, Option, Checkbox, CheckboxButton, CheckboxGroup, Input, Loading, Progress, Badge } from 'element-ui';
 import { byte } from "@/libs/util"

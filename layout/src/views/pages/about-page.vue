@@ -1,11 +1,4 @@
-/*  关于
- * @Author: 白云苍狗 
- * @Date: 2020-09-21 19:04:35 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-09-30 21:36:53
- */
- 
-<template>
+ <template>
     <div>
         <div class="about">
             <p class="about-post">《One Wallhaven》是一个由个人开发的桌面壁纸类程序。 起初是由于站点（wallhaven.cc）经常无法使用以后， 实在找不到自己喜欢的壁纸类网站和程序，于是决定自己写个， 另外要申明一下，我并不会生产图片壁纸， 本程序图片内容都来源于互联网(wallhaven.cc)， 图片版权为原作者所有，若有侵权联系删除。</p>

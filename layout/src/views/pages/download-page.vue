@@ -1,10 +1,3 @@
-/* 下载
- * @Author: 白云苍狗 
- * @Date: 2020-09-21 18:56:05 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-09-28 23:22:44
- */
-
 <template>
     <div class="down-page">
         <!--  <template v-if="$root.downFiles.length>0"> -->

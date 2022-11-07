@@ -1,10 +1,3 @@
-/*
- * @Author: 白云苍狗 
- * @Date: 2020-11-03 23:27:09 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-05 22:32:40
- */
-
 /**
  * 获取时间 yyyy-MM-dd hh:mm:ss
  */

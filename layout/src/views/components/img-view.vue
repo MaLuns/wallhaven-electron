@@ -1,9 +1,3 @@
-/*
- * @Author: 白云苍狗 
- * @Date: 2020-09-25 18:27:17 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-11-05 22:31:41
- */
 <template>
     <transition name="slide">
         <div v-if="show" class="animation-content">

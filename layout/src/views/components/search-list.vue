@@ -1,9 +1,3 @@
-/* 查询组件
- * @Author: 白云苍狗 
- * @Date: 2020-09-22 21:45:41 
- * @Last Modified by: 白云苍狗
- * @Last Modified time: 2020-09-27 22:53:36
- */
 <template>
     <div class="search">
         <el-checkbox-group v-model="search.purity" class="mgr10">
