@@ -108,6 +108,7 @@
                     line-height: 28px;
                     text-align: center;
                     transition: all 0.3s ease;
+                    cursor: pointer;
 
                     &:hover {
                         color: #e4e4e4;

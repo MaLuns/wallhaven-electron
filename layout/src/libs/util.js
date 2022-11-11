@@ -122,27 +122,82 @@ export const objToUrl = (obj = {}) => {
 
 /**
  * 图片宽高比适应
- * @param {*} w 容器宽
- * @param {*} h 容器高
+ * @param {*} width 容器宽
+ * @param {*} height 容器高
  * @param {*} r 图片宽高比
  */
-export const aspectRatioToWH = (w, h, r, iw, ih) => {
-    let _r = w / h;
-    if (iw < w && ih < h) {
-        return { w: iw, h: ih }
+export const aspectRatioToWH = (width, height, r, iw, ih) => {
+    let _r = width / height;
+    if (iw < width && ih < height) {
+        return { width: iw, height: ih }
     }
     //容器宽度比 大=于 内容 宽高比  以高度为基准
     if (_r > r) {
         return {
-            w: h * r, h
+            width: height * r, height
         }
     } else if (_r < r) {
         return {
-            w, h: w / r
+            width, height: width / r
         }
     } else {
         return {
-            w, h
+            width, height
         }
     }
 }
+
+/**
+ * 生成空二维数组
+ * @param {*} count 
+ * @returns 
+ */
+export const toTwoDimensionalArray = (count, defval) => {
+    let list = []
+    for (let index = 0; index < count; index++) {
+        if (defval === undefined) {
+            list.push([])
+        } else {
+            list.push(defval)
+        }
+    }
+    return list;
+}
+
+/**
+ * 查找元素最小下标
+ * @param {*} arr 
+ * @returns 
+ */
+export const minValIndex = (arr = []) => {
+    let val = Math.min(...arr);
+    return arr.findIndex(i => i === val)
+}
+
+/**
+ * 查找最大元素
+ * @param {*} arr 
+ * @returns 
+ */
+export const maxVal = (arr = []) => Math.max(...arr)
+
+/**
+ * 获取元素 Transform
+ * @param {*} doms 
+ * @returns 
+ */
+export const getTransforms = (doms) => {
+    let map = new Map()
+    doms.forEach((dom) => {
+        map.set(dom.id, dom.style.transform)
+    })
+    return map
+}
+
+/**
+ * 生成指定范围随机数
+ * @param {*} n 
+ * @param {*} m 
+ * @returns 
+ */
+export const getRandom = (n, m) => Math.floor(Math.random() * (m - n + 1) + n)

@@ -1,7 +1,7 @@
 <template>
     <div>
         <search-list :total="meta.total" @search="handleSearch" :purity="search.purity" :sorting="search.sorting"></search-list>
-        <img-list :list="list" :skeleton="skeleton" @next="next"></img-list>
+        <img-list ref="imglist" :skeleton="skeleton" @loadMore="next"></img-list>
     </div>
 </template>
 

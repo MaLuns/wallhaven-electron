@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img-list :list="$root.collections"></img-list>
+        <!-- <img-list :list="$root.collections"></img-list> -->
     </div>
 </template>
 

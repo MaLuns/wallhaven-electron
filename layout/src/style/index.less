@@ -11,7 +11,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width : 8px;
+    width : 0px;
     height: 10px;
 }
 
@@ -19,6 +19,7 @@ body {
     border-radius: 5px;
     filter       : blur(10px);
     background   : #979fda40;
+    cursor       : pointer;
 }
 
 
@@ -45,8 +46,8 @@ body {
     }
 }
 
-@bgColor: #201f29;
-@bgTheme: rgba(0, 0, 0, 0.623);
+@bgColor: #5a5764;
+@bgTheme: rgba(65, 63, 63, 0.623);
 @color  : #eee;
 
 .el-checkbox-group {
@@ -57,13 +58,13 @@ body {
         &.is-checked {
             .el-checkbox-button__inner {
                 color           : #38acfa;
-                background-color: @bgTheme;
-                border-color    : @bgTheme;
+                background-color: @bgColor;
+                border-color    : @bgColor;
             }
 
             &:first-child {
                 .el-checkbox-button__inner {
-                    border-left-color: @bgTheme;
+                    border-left-color: @bgColor;
                 }
             }
         }
@@ -71,8 +72,12 @@ body {
         .el-checkbox-button__inner {
             border    : none !important;
             box-shadow: none !important;
-            background: @bgColor;
+            background: @bgTheme;
             color     : #a0a0a0;
+        }
+
+        +.el-checkbox-button {
+            border-left: 1px solid #3b4652;
         }
     }
 }
@@ -84,7 +89,7 @@ body {
 
 .el-select-dropdown,
 .el-input__inner {
-    color      : #a0a0a0;
+    color      : #e0d9d9;
     background : @bgColor;
     border     : none;
     user-select: none;
@@ -108,11 +113,12 @@ body {
 }
 
 .el-select-dropdown__item {
+    color: #c3c3c3;
 
     &.selected,
     &.hover,
     &:hover {
-        color     : #a0a0a0;
+        color     : #faf9f9;
         background: @bgColor;
         border    : none;
     }
