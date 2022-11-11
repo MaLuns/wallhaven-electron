@@ -42,7 +42,7 @@ new Vue({
   methods: {
     // 添加收藏
     AddCollection(obj) {
-      if (obj) this.collections.splice(0, 0, obj)
+      if (obj) this.collections.splice(0, 0, { ...obj })
     },
     // 移除收藏
     removeCollection(obj) {

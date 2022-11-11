@@ -1,7 +1,7 @@
 <template>
     <div ref="visibleContainer" class="visible-container" key="visible-container">
         <template v-if="skeleton">
-            <li v-for="item in 12" :key="item" class="skeleton">
+            <li v-for="item in 18" :key="item" class="skeleton">
                 <div class="img"></div>
                 <div class="desc">
                     <span></span>
@@ -345,9 +345,10 @@ export default {
 <style lang="less">
 .visible-container {
     height: 100%;
-    margin: 0 10px 20px;
+    margin: 10px 10px 20px;
     overflow-y: scroll;
     overflow-x: hidden;
+    text-align: center;
 
     &::-webkit-scrollbar {
         width: 10px;
@@ -442,19 +443,36 @@ export default {
     }
 
     .skeleton {
+        display: inline-block;
+        margin: 10px;
+
+        .img {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(60deg,
+                    #18171717 25%,
+                    #0c0c0c17 37%,
+                    #3a3a3a1f 63%);
+            background-size: 400% 100%;
+            animation: skeleton-loading 1.4s ease infinite;
+        }
+
         .desc {
-            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            line-height: 40px;
+            height: 40px;
 
             span {
                 display: inline-block;
-                width: 30%;
-                height: 20px;
+                flex: 1;
                 background: linear-gradient(60deg,
                         #ffffff17 25%,
                         #e2e2e217 37%,
                         #e4e4e41f 63%);
                 background-size: 400% 100%;
-                animation: skeleton-loading 1.4s ease infinite;
+                //animation: skeleton-loading 1.4s ease infinite;
             }
 
             @keyframes skeleton-loading {
