@@ -70,8 +70,8 @@
         eTag: '标示',
         startTime: 'UNIX 下载时间'
     } */
-    import { pause, resume, nextresume, cancel } from "@/libs/downfile"
-    let { shell, ipcRenderer } = __non_webpack_require__('electron');
+    import { pause, nextresume, cancel } from "@/libs/downfile"
+    let { ipcRenderer } = __non_webpack_require__('electron');
 
 
     export default {
@@ -82,11 +82,7 @@
             handlePaused(img) { pause(img.url) },
             //恢复下载  恢复断点下载
             handleResume(img) {
-                if (img.state === 'paused') {
-                    resume(img.url)
-                } else {
-                    nextresume(img)
-                }
+                nextresume(img)
             },
             //取消下载
             handleClose(item, type = true) {

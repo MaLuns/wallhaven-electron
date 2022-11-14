@@ -134,10 +134,7 @@ const mainWindowIpcStart = function (win) {
         setWallpaper(path)
     })
 
-
-    const setWallpaper = (path) => {
-        wallpaper.set(path)
-    }
+    const setWallpaper = (path) => wallpaper.set(path)
 
     // 下载文件
     const downfile = (url) => {
@@ -211,7 +208,8 @@ const mainWindowIpcStart = function (win) {
                         break;
                     default:
                         cacheItem.state = 'completed'
-                        notification(cacheItem.path)
+                        // win 禁用通知后会造成卡顿，需要用三方包提前判断 https://www.electronjs.org/zh/docs/latest/tutorial/notifications
+                        // notification(cacheItem.path)
                         break;
                 }
 
@@ -251,17 +249,12 @@ const mainWindowIpcStart = function (win) {
         }
     }
 
-    app.on("gpu-process-crashed", function () {
+    app.on("child-process-gone", function (e, details) {
         cacheDownItemClose()
     })
 
-    app.on("renderer-process-crashed", function () {
-        cacheDownItemClose()
-    })
-
-    let noti
     const notification = (url) => {
-        noti = new Notification({
+        let noti = new Notification({
             title: "下载成功",
             bodyString: url,
             silentBoolean: false,
