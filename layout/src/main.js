@@ -2,17 +2,18 @@ import Vue from 'vue'
 import App from './App.vue'
 import '@/libs/use';
 import { getTime, getImgCollection, updImgCollection, getDownFiles, getDownDoneFiles, updDownFiles, updDownDoneFiles } from "@/libs/util";
-import { downFile, updateDownState, initPath } from '@/libs/downfile'
+import { downFile, updateDownState, initPath } from '@/libs/sead'
 // 初始化下载目录
 initPath()
 
 new Vue({
   data() {
     return {
-      //收藏
+      // 收藏
       collections: getImgCollection(),
       // 下载列表
       downFiles: getDownFiles(),
+      // 下载完成
       downDoneFiles: getDownDoneFiles()
     }
   },
@@ -64,7 +65,7 @@ new Vue({
       }
     },
     // 更新状态
-    updateDownState(data) {
+    updateDownState(e, data) {
       this.$nextTick(() => {
         let { id, done, progress } = data;
         let index = this.downFiles.findIndex(item => item.id === id)

@@ -11,23 +11,19 @@ let cacheDownItem = {}
 const mainWindowIpcStart = function (win) {
 
     // 打开调试
-    ipcMain.on("toggle_dev_tools", function (event, arg) {
-        win.webContents.toggleDevTools();
-    })
+    ipcMain.handle("toggle_dev_tools", () => win.webContents.toggleDevTools())
 
     // 重启
-    ipcMain.on("restart", function () {
+    ipcMain.handle("restart", () => {
         app.relaunch();
         app.exit(0)
     })
 
     // 最小化
-    ipcMain.on("min", function () {
-        win.minimize()
-    })
+    ipcMain.handle("min", () => win.minimize())
 
     // 最大化
-    ipcMain.on("max", function () {
+    ipcMain.handle("max", () => {
         if (win.isMaximized()) {
             win.unmaximize()
         } else {
@@ -36,117 +32,103 @@ const mainWindowIpcStart = function (win) {
     })
 
     // 关闭程序
-    ipcMain.on("close", function () {
+    ipcMain.handle("close", () => {
         cacheDownItemClose()
         win.close();
     })
 
     // 设置下载路径
-    ipcMain.on("set_path", function (e, data = {}) {
-        let { path } = data
+    ipcMain.handle("set_path", async (e, path) => {
         if (path) {
             if (path !== 'not') app.setPath('downloads', path);
-            e.reply('set_path', app.getPath('downloads'));
+            return app.getPath('downloads');
         } else {
-            dialog.showOpenDialog({
+            let files = await dialog.showOpenDialog({
                 title: '选择下载目录',
                 defaultPath: app.getPath('downloads'),
                 properties: ['openDirectory']
-            }).then((files) => {
-                if (!files.canceled) {// 如果有选中
-                    app.setPath('downloads', files.filePaths[0])
-                }
-                e.reply('set_path', files)
             })
+            if (!files.canceled) {// 如果有选中
+                app.setPath('downloads', files.filePaths[0])
+            }
+            return files;
         }
     })
 
-    // 设置下载路径
-    ipcMain.on("check_path", function (e, data = {}) {
-        let { path } = data
+    // 检查路径
+    ipcMain.handle("open_path", (e, path) => new Promise(resolve => {
         fs.access(path, fs.constants.F_OK, (err) => {
             if (!err) {
                 shell.showItemInFolder(path)
             }
-            e.reply('check_path' + path, err);
+            resolve(err)
         });
-    })
+
+    }))
 
     // 下载
-    ipcMain.on("down-file", function (e, data) {
+    ipcMain.handle("down_file", (e, data) => {
         let { url } = data
         if (!cacheDownItem[url]) {
             cacheDownItem[url] = { ...data }
-            downfile(url)
-        } else {
-            /*   e.sender("down-file", "文件正在下载") */
+            session.defaultSession.downloadURL(url)
         }
     })
 
     // 暂停
-    ipcMain.on("down-file-pause", function (e, data) {
-        let { url } = data
+    ipcMain.handle("down_file_pause", (e, url) => {
         let t = cacheDownItem[url]
-        if (t) {
-            t._downFileItem.pause()
-        }
-        e.reply("down-file-pause-" + url, '已暂停')
+        if (t) t._downFileItem.pause()
     })
 
     // 继续
-    ipcMain.on("down-file-resume", function (e, data) {
-        let { url } = data
+    ipcMain.handle("down_file_resume", (e, url) => {
         let t = cacheDownItem[url]
-        if (t) {
-            t._downFileItem.resume()
-        }
-        e.reply("down-file-resume-" + url, '已恢复下载')
+        if (t) t._downFileItem.resume()
     })
 
     // 取消下载
-    ipcMain.on("down-file-cancel", function (e, data) {
-        let { url } = data
+    ipcMain.handle("down_file_cancel", (e, { url, path }) => {
         let t = cacheDownItem[url]
         if (t) {
             t._downFileItem.cancel()
         } else {
-            // 删除未下在完成文件
+            // 删除 temp 临时文件
+            fs.access(path + '.temp', fs.constants.F_OK, (err) => {
+                if (!err) {
+                    fs.unlink(path + '.temp', () => { })
+                }
+            });
         }
-        e.reply("down-file-cancel-" + url, '已取消下载')
     })
 
     // 断点恢复下载
-    ipcMain.on("resume-download", function (e, data) {
+    ipcMain.handle("resume_download", (e, data) => {
         let { url } = data
         let t = cacheDownItem[url]
-        if (t) {
-            t._downFileItem.resume()
-        } else {
+        if (t) t._downFileItem.resume()
+        else {
             cacheDownItem[url] = { ...data }
             resumeDownload(data)
         }
-        e.reply("down-file-resume-" + url, '已恢复下载')
     })
 
     // 设置壁纸
-    ipcMain.on('set-wallpaper', function (e, data) {
-        let { path } = data
-        setWallpaper(path)
-    })
-
-    const setWallpaper = (path) => wallpaper.set(path)
-
-    // 下载文件
-    const downfile = (url) => {
-        session.defaultSession.downloadURL(url)
-    }
+    ipcMain.handle('set_wallpaper', (e, path) => wallpaper.set(path))
 
     // 恢复下载
     const resumeDownload = (obj = {}) => {
-        let { path = '', urlChain = [], offset = 0, length = 0, lastModified, eTag, startTime } = obj;
+        let { url, path = '', urlChain = [], offset = 0, length = 0, lastModified, eTag, startTime, _temp } = obj;
         if (!path || urlChain.length === 0 || length == 0) {
             return;
         }
+
+        // 还原下文件名
+        if (_temp) {
+            fs.renameSync(path + '.temp', path)
+            cacheDownItem[url]._temp = false
+        }
+
         session.defaultSession.createInterruptedDownload({
             path, urlChain, offset, length, lastModified, eTag, startTime
         })
@@ -193,12 +175,17 @@ const mainWindowIpcStart = function (win) {
                         lastBytes = offset
                     }
                 }
-                !cacheItem.notSend && win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)));
+
+                if (!cacheItem.notSend) win.webContents.send("update_down_state", JSON.parse(JSON.stringify(cacheItem)));
+
+                // 默认情况下，下载中断时下载中文件会被删除，复制文件避免删除
+                if (cacheItem._temp) fs.copyFileSync(cacheItem.path, cacheItem.path + '.temp')
             })
 
             // 下载完成
             item.once('done', (event, state) => {
                 cacheItem.done = 'end'
+
                 switch (state) {
                     case 'interrupted':
                         cacheItem.state = 'interrupted-err'
@@ -213,10 +200,10 @@ const mainWindowIpcStart = function (win) {
                         break;
                 }
 
-                !cacheItem.notSend && win.webContents.send("update-down-state", JSON.parse(JSON.stringify(cacheItem)))
+                if (!cacheItem.notSend) win.webContents.send("update_down_state", JSON.parse(JSON.stringify(cacheItem)))
 
                 if (cacheItem.isSetWallpaper) {
-                    setWallpaper(cacheItem.path)
+                    wallpaper.set(cacheItem.path)
                 }
 
                 //删除缓存
@@ -225,7 +212,7 @@ const mainWindowIpcStart = function (win) {
                 item = null;
             })
 
-            // 恢复
+            // 恢复下载
             if (item.canResume) {
                 item.resume()
             }
@@ -235,15 +222,19 @@ const mainWindowIpcStart = function (win) {
         }
     })
 
-
     // 暂停所有下载任务
     const cacheDownItemClose = () => {
         for (let key in cacheDownItem) {
             if (cacheDownItem.hasOwnProperty(key)) {
                 let element = cacheDownItem[key];
                 if (element._downFileItem) {
-                    element._downFileItem.pause()
-                    element._downFileItem = null
+                    element._temp = true
+                    if (element._downFileItem.isPaused()) {
+                        fs.copyFileSync(element.path, element.path + '.temp')
+                        win.webContents.send("update_down_state", JSON.parse(JSON.stringify(element)));
+                    } else {
+                        element._downFileItem.pause()
+                    }
                 }
             }
         }

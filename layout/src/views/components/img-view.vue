@@ -19,7 +19,7 @@
 
 <script>
 import { aspectRatioToWH, getTime } from "@/libs/util";
-import { setWallpaper } from "@/libs/downfile";
+import { setWallpaper } from "@/libs/sead";
 import { getImgBlod } from "@/libs/ajax";
 import errimg from "@/assets/errimg.svg"
 
@@ -118,7 +118,6 @@ export default {
 
                     }).catch(res => {
                         //this.$message.error('图片加载失败')
-                        console.log(res)
                         this.loading = false;
                     })
                 };

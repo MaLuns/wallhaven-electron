@@ -70,8 +70,7 @@
         eTag: '标示',
         startTime: 'UNIX 下载时间'
     } */
-    import { pause, nextresume, cancel } from "@/libs/downfile"
-    let { ipcRenderer } = __non_webpack_require__('electron');
+    import { pause, nextresume, cancel, setPath, openPath} from "@/libs/sead"
 
 
     export default {
@@ -88,7 +87,7 @@
             handleClose(item, type = true) {
                 //取消下载任务
                 if (item.state !== "completed") {
-                    cancel(item.url)
+                    cancel(item)
                 }
                 //删除列表
                 this.$root.removeDownFile(item.id, type)
@@ -97,15 +96,13 @@
             handleOpen(event) {
                 let path = event.target.dataset.path;
                 if (path !== undefined) {
-                    ipcRenderer.send('check_path', { path });
-                    ipcRenderer.once(`check_path${path}`, (e, err) => {
-                        err && this.$message({ message: "文件不存在", type: "error", duration: 2000 })
+                    openPath(path).then(err=>{
+                        err && this.$message({ message: "文件不存在", type: "error", duration: 2000 }) 
                     })
                 }
             },
             handleSetDownPath() {
-                ipcRenderer.send('set_path');
-                ipcRenderer.once(`set_path`, (e, data) => {
+                setPath().then(data=>{
                     if (!data.canceled) {
                         localStorage.setItem('downloads', data.filePaths[0])
                         this.path = data.filePaths[0]
@@ -148,6 +145,7 @@
                 }
                 .btn {
                     color: #0081ff;
+                    cursor: pointer;
                 }
             }
             .title {
@@ -212,6 +210,7 @@
                             top: 0px;
                             right: 30px;
                             padding: 5px;
+                            cursor: pointer;
 
                             div {
                                 font-size: 20px !important;
@@ -223,6 +222,7 @@
                             top: 5px;
                             padding: 5px;
                             right: 0;
+                            cursor: pointer;
                         }
                     }
 
@@ -269,6 +269,7 @@
                         top: 25px;
                         right: 20px;
                         padding: 5px;
+                        cursor: pointer;
                     }
                 }
             }

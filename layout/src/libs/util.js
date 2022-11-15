@@ -6,7 +6,6 @@ export const getTime = () => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 }
 
-
 /**
  * 存储单位换算
  * @param {*} bytes  
@@ -19,7 +18,6 @@ export const byte = (bytes) => {
 
     return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 }
-
 
 /**
  * 防抖
@@ -56,7 +54,6 @@ export const getData = (key, val = []) => {
  */
 export const setData = (key, val) => localStorage.setItem(key, JSON.stringify(val))
 
-
 /**
  * 获取收藏数据
  */
@@ -68,7 +65,6 @@ export const getImgCollection = () => getData('ImgCollection');
  */
 export const updImgCollection = (arr) => setData('ImgCollection', arr)
 
-
 /**
  * 获取下载数据
  */
@@ -78,10 +74,7 @@ export const getDownFiles = () => getData('DownFiles');
  * 更新下载列表
  * @param {*} arr 
  */
-const _updDownFiles = debounce(setData, 1000)
-export const updDownFiles = (arr) => {
-    _updDownFiles('DownFiles', arr)
-}
+export const updDownFiles = (arr) => setData('DownFiles', arr)
 
 /**
  * 获取下载完成数据
@@ -92,9 +85,7 @@ export const getDownDoneFiles = () => getData('DownDoneFiles');
  * 更新下载完成列表
  * @param {*} arr 
  */
-const _updDownDoneFiles = debounce(setData, 1000)
-export const updDownDoneFiles = (arr) => _updDownDoneFiles('DownDoneFiles', arr)
-
+export const updDownDoneFiles = (arr) => setData('DownDoneFiles', arr)
 
 /**
  * obj 转 url

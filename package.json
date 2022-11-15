@@ -1,6 +1,6 @@
 {
   "name": "one-wallhaven",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "one-wallhaven 壁纸程序",
   "main": "./src/main/index.js",
   "scripts": {

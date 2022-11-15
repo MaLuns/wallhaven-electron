@@ -7,7 +7,6 @@
 </template>
 
 <script>
-    const { ipcRenderer } = __non_webpack_require__("electron");
     export default {
         name: "NavStuats",
         props: {
@@ -18,7 +17,7 @@
         },
         methods: {
             TitleClick(type) {
-                ipcRenderer.send(type);
+                window.send[type](type);
             }
         }
     };

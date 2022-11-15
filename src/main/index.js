@@ -13,8 +13,8 @@ if (!gotTheLock) {
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
     let winURL = path.resolve(__dirname, "../renderer/index.html");
-
     let mainWindow;
+
     function createWindow() {
         const win = new BrowserWindow({
             width: 1580,
@@ -22,18 +22,21 @@ if (!gotTheLock) {
             //resizable: false,
             //useContentSize: true,
             /* transparent: true, */
+
             icon: path.resolve(__dirname, "./icon/logo.png"),
             frame: false,
             show: false,
             webPreferences: {
+                preload: path.resolve(__dirname, "./lib/preload.js"),
                 webSecurity: false,
-                nodeIntegration: true,
-                contextIsolation: false,
-                webviewTag: true
             }
         })
+
         /* win.maximize(); */
         // console.log(app.isPackaged)
+
+        mainWindowIpcStart(win)
+
         if (app.isPackaged) {
             win.loadURL(`file://${winURL}`)
         } else {
@@ -50,7 +53,6 @@ if (!gotTheLock) {
 
     app.on("ready", function () {
         mainWindow = new createWindow();
-        mainWindowIpcStart(mainWindow)
     })
 
     app.on('second-instance', (event, commandLine, workingDirectory) => {
