@@ -11,51 +11,34 @@
             </li>
         </template>
         <template v-else>
-            <template v-if="visibleList.length > 0">
-                <ul class="visible-list" :style="visibleListStyle">
-                    <li ref="imgs" v-for="item in visibleList" :key="item.id" :style="item.style"
-                        class="visible-list-item" :id="item.id">
-                        <div class="img" :style="{ height: item.thumbs_height + 'px' }">
-                            <img @error="handleError" loading="lazy" draggable="false" :src="item.original"
-                                @click="handleView($event, item)" />
-                            <div class="img-info">
-                                <span>{{ item.file_size | byte }}</span>
-                                <span>{{ item.resolution }}</span>
-                                <span>{{ item.file_type }}</span>
-                            </div>
-                        </div>
-                        <div class="desc">
-                            <span title="取消收藏" :key="item.id + 'cxx'" v-if="getCollection(item.id)"
-                                @click="handleRemoveCollection(item)"
-                                class="iconfont icon-collection-b shoucang"></span>
-                            <span title="收藏" :key="item.id + 'cx'" v-else @click="handleAddCollection(item)"
-                                class="iconfont icon-collection-b"></span>
-                            <span title="设为壁纸" class="iconfont icon-tupian" @click="handleDownFile(item, true)"></span>
-                            <span title="下载" class="iconfont icon-xiazai" @click="handleDownFile(item)"></span>
-                        </div>
-                    </li>
-                </ul>
-                <div :style="{ height: placeholderHeight + 'px' }" key="placeholder"></div>
-                <!-- <li v-for="(item,index) in list" :key="item.id+index" :style="{height:item.thumbs_height+40+'px' }">
-                    <div class="img" :style="{height:item.thumbs_height+'px' }">
-                        <img @error="handleError" loading="lazy" draggable="false" :src="item.thumbs.original" @click="handleView(item)" />
+            <!-- <template v-if="visibleList.length > 0"> -->
+            <ul class="visible-list" :style="visibleListStyle">
+                <li ref="imgs" v-for="item in visibleList" :key="item.id" :style="item.style" class="visible-list-item"
+                    :id="item.id">
+                    <div class="img" :style="{ height: item.thumbs_height + 'px' }">
+                        <img @error="handleError" loading="lazy" draggable="false" :src="item.original"
+                            @click="handleView($event, item)" />
                         <div class="img-info">
                             <span>{{ item.file_size | byte }}</span>
-                            <span>{{item.resolution}}</span>
+                            <span>{{ item.resolution }}</span>
                             <span>{{ item.file_type }}</span>
                         </div>
                     </div>
                     <div class="desc">
-                        <span title="取消收藏" :key="item.id+'cxx'" v-if="getCollection(item.id)" @click="handleRemoveCollection(item)" class="iconfont icon-collection-b shoucang"></span>
-                        <span title="收藏" :key="item.id+'cx'" v-else @click="handleAddCollection(item)" class="iconfont icon-collection-b"></span>
+                        <span title="取消收藏" :key="item.id + 'cxx'" v-if="getCollection(item.id)"
+                            @click="handleRemoveCollection(item)" class="iconfont icon-collection-b shoucang"></span>
+                        <span title="收藏" :key="item.id + 'cx'" v-else @click="handleAddCollection(item)"
+                            class="iconfont icon-collection-b"></span>
                         <span title="设为壁纸" class="iconfont icon-tupian" @click="handleDownFile(item, true)"></span>
                         <span title="下载" class="iconfont icon-xiazai" @click="handleDownFile(item)"></span>
                     </div>
-                </li> -->
-            </template>
+                </li>
+            </ul>
+            <div :style="{ height: placeholderHeight + 'px' }" key="placeholder"></div>
+            <!-- </template>
             <template v-else>
                 <empty-page title="未找到图片信息~"></empty-page>
-            </template>
+            </template> -->
         </template>
     </div>
 </template>
@@ -111,7 +94,10 @@ export default {
         // 缓存列表
         this.catchList = [];
         this.catchKeys = {}
+        // 缓存下标和滚动高度
         this.catchIndex = 0;
+        this.catchScrollTop = 0;
+
         // 动画标识 仅在 column 发生变化时执行
         this.isAnimate = false
 
@@ -167,51 +153,103 @@ export default {
             this.catchKeys = {}
             this.sumHeight = toTwoDimensionalArray(column, 0)
             this.$refs.visibleContainer.scrollTo(0, 0)
+            this.catchIndex = 0;
+            this.catchScrollTop = 0;
         },
-        // 动态线上列表
+        // 更新虚拟列表
         updateVisibleList() {
-            let top = this.scrollTop - this.clientHeight
+            /* let top = this.scrollTop - this.clientHeight
             let bottom = this.scrollTop + this.clientHeight * 2
             let visibleList = this.catchList.filter(img => img._top > top && img._top < bottom)
-            this.visibleList = Object.freeze(visibleList);
+            this.visibleList = Object.freeze(visibleList); */
 
-            //#region TODO 缓存下标 二分快速查找
-            /* let startState = true
-            let endState = true
             let startIndex = this.catchIndex
-            let endIndex = this.catchIndex
+            let startItem = this.catchList[startIndex]
+            if (!startItem) return;
+            let top = this.scrollTop - this.clientHeight
+            let bottom = this.scrollTop + this.clientHeight * 2
             let len = this.catchList.length
-            let visibleList = []
-            let isCheck = false
 
-            while (startState || endState) {
-                let startItem = this.catchList[startIndex]
-                if (startIndex >= 0) {
-                    if (startItem._top > top && startItem._top < bottom) {
-                        visibleList.unshift(startItem)
-                        this.catchIndex = startIndex
-                        isCheck = true
-                    } else if (isCheck) {
-                        startState = false
+            const find = (index, catchList, comparefun) => {
+                let startIndex = index
+                let endIndex = index + 1
+                let startState = true
+                let endState = true
+                let len = catchList.length
+                let list = []
+
+                while (startState || endState) {
+                    if (startState) {
+                        if (startIndex >= 0) {
+                            let item = catchList[startIndex]
+                            if (item && comparefun(item)) {
+                                list.push(item)
+                                startIndex--;
+                            } else {
+                                startState = false
+                            }
+                        } else {
+                            startState = false
+                        }
                     }
-                } else {
-                    startState = false
+
+                    if (endState) {
+                        if (endIndex < len) {
+                            let item = catchList[endIndex]
+                            if (item && comparefun(item)) {
+                                list.push(item)
+                                endIndex++;
+                            } else {
+                                endState = false
+                            }
+                        } else {
+                            endState = false
+                        }
+                    }
+                }
+                return list;
+            }
+
+            // 当前缓存下标不在范围内
+            if (!(startItem._top > top && startItem._top < bottom)) {
+                let scrollSize = this.catchScrollTop - this.scrollTop
+                let func = scrollSize < 0 ? (i, z = 1) => i + z : (i, z = 1) => i - z;
+
+                if (Math.abs(scrollSize) > 3000) {
+                    startIndex = func(startIndex, (parseInt(Math.abs(scrollSize) / 350)) * this.column)
+                    startIndex = scrollSize < 0 ? Math.min(len - 1, startIndex) : Math.max(0, startIndex)
                 }
 
-                let endItem = this.catchList[endIndex]
-                if (endIndex < len && endItem._top > top && endItem._top < bottom) {
-                    visibleList.push(endItem)
-                    isCheck = false
-                    this.catchIndex = endIndex
-                } else {
-                    endState = false || isCheck
+                let flag = true
+                let endIndex = startIndex
+
+                while (flag) {
+                    --startIndex
+                    ++endIndex
+
+                    let img = this.catchList[startIndex]
+                    let img2 = this.catchList[endIndex]
+
+                    if (img && img._top > top && img._top < bottom) {
+                        flag = false
+                    }
+
+                    if (img2 && img2._top > top && img2._top < bottom) {
+                        flag = false
+                        startIndex = endIndex
+                    }
+
+                    if (startIndex <= 0 && endIndex >= len) {
+                        flag = false
+                    }
                 }
 
-                --startIndex;
-                ++endIndex;
-            } */
+                // 更新下标
+                this.catchIndex = startIndex
+            }
 
-            //#endregion
+            this.visibleList = Object.freeze(find(startIndex, this.catchList, (img) => img._top > top && img._top < bottom));
+            this.catchScrollTop = this.scrollTop
 
             const prevImgs = this.$refs.imgs
             if (prevImgs && this.isAnimate) {
@@ -392,11 +430,13 @@ export default {
             position: relative;
             width: 300px;
             height: 200px;
+            overflow: hidden;
 
             img {
                 display: block;
                 width: 100%;
                 height: 100%;
+                transition: transform 0.4s;
             }
 
             .img-info {
@@ -418,6 +458,10 @@ export default {
             &:hover {
                 .img-info {
                     transform: translateY(0);
+                }
+
+                img {
+                    transform: scale(1.1);
                 }
             }
         }
