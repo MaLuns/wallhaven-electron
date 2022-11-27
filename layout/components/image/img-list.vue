@@ -16,8 +16,7 @@
                     <li ref="imgs" v-for="item in visibleList" :key="item.id" :style="item.style"
                         class="visible-list-item" :id="item.id">
                         <div class="img" :style="{ height: item.thumbs_height + 'px' }">
-                            <img @error="handleError" loading="lazy" draggable="false" :src="item.original"
-                                @click="handleView($event, item)" />
+                            <img-plus :src="item.original" @click="handleView($event, item)"></img-plus>
                             <div class="img-info">
                                 <span>{{ item.file_size | byte }}</span>
                                 <span>{{ item.resolution }}</span>
@@ -46,7 +45,6 @@
 
 <script>
 import { debounce, toTwoDimensionalArray, minValIndex, maxVal, getTransforms, getRandom } from "@/libs/util";
-import errimg from "@/assets/errimg.svg"
 
 export default {
     name: "ImgList",
@@ -68,6 +66,10 @@ export default {
         skeleton: {
             type: Boolean,
             default: false
+        },
+        mode: {
+            type: String,
+            default: ""
         }
     },
     computed: {
@@ -106,6 +108,10 @@ export default {
             this.isAnimate = false
             this.scrollTop = scrollTop
         }, 50)
+    },
+    created() {
+        // 预览模式
+        this.previewMode = this.mode || this.$store.appConfig.get('previewMode')
     },
     mounted() {
         const visibleContainer = this.$refs.visibleContainer;
@@ -317,7 +323,7 @@ export default {
 
                     img.original = img.thumbs.original
                     img.thumbs_width = width;
-                    img.thumbs_height = parseInt(Math.max(width / img.ratio, 200));
+                    img.thumbs_height = this.previewMode === 'waterfall' ? parseInt(Math.max(width / img.ratio, 200)) : 200;
                     img.original = img.thumbs_height === 200 ? img.thumbs.small : img.thumbs.original
                     img._top = sumHeight[minIndex]
                     img._collection = this.$store.collections.has(img.id)
@@ -336,10 +342,6 @@ export default {
 
             this.catchList.push(...newImgs)
             this.placeholderHeight = maxVal(sumHeight)
-        },
-        // 加载失败
-        handleError(e) {
-            e.target.src = errimg
         },
         // 列表滚动
         handlerScroll(e) {
