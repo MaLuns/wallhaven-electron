@@ -15,8 +15,9 @@
                 <ul class="visible-list" :style="visibleListStyle">
                     <li ref="imgs" v-for="item in visibleList" :key="item.id" :style="item.style"
                         class="visible-list-item" :id="item.id">
-                        <div class="img" :style="{ height: item.thumbs_height + 'px' }">
-                            <img-plus :src="item.original" @click="handleView($event, item)"></img-plus>
+                        <div class="img" :style="{ height: item.thumbs_height + 'px' }"
+                            @click="handleView($event, item)">
+                            <img-plus :src="item.original"></img-plus>
                             <div class="img-info">
                                 <span>{{ item.file_size | byte }}</span>
                                 <span>{{ item.resolution }}</span>

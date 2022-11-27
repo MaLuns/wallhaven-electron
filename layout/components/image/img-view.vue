@@ -34,7 +34,7 @@ export default {
             imgStyle: {
                 width: 0,
                 height: 0,
-                transform: 0
+                transform: 'none'
             },
         }
     },
@@ -131,7 +131,8 @@ export default {
                 width: width + 'px',
                 height: height + 'px',
                 transform: `translate(${(clientWidth - width) / 2}px, ${(clientHeight - height) / 2}px)`
-            }
+            }        
+            this.$refs.img.style.transform = this.imgStyle.transform
         },
         // 图片加载失败
         handleError() {
