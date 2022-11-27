@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            background-color: transparent;
+        }
+
+        .config {
+            border-radius: 8px;
+            color: #eee;
+            border: 4px solid #2e4c65;
+            background-color: #201f29;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .header {
+            font-size: 16px;
+            padding: 10px 20px 8px;
+            -webkit-app-region: drag;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px -6px 14px 0px #0000009e;
+        }
+
+        .header h3 {
+            flex: 1;
+            cursor: move;
+        }
+
+        .header svg {
+            height: 18px;
+            width: 18px;
+            fill: #eee;
+            -webkit-app-region: no-drag;
+            cursor: pointer;
+        }
+
+        .header svg:hover {
+            fill: #ff6b6b;
+        }
+
+        .config-area {
+            position: absolute;
+            margin: 20px;
+            height: calc(100% - 90px);
+            width: calc(100% - 50px);
+        }
+
+        .config-area::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            border-radius: 2px;
+            height: 100%;
+            background-color: #2e4c65;
+            left: 76px;
+        }
+
+        .config-item {
+            display: flex;
+            margin: 20px 0;
+        }
+
+        .config-item-label {
+            font-size: 14px;
+            width: 100px;
+            color: #969696;
+            flex-shrink: 0;
+        }
+
+        .config-item-value {
+            font-size: 14px;
+            color: #c2c2c2;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .button+.button {
+            margin-left: 20px;
+        }
+
+        .button:hover {
+            color: #4d98e7;
+            border-color: #4d98e7;
+        }
+
+        input[type=checkbox] {
+            position: absolute;
+            opacity: 0;
+            width: 20px;
+            height: 20px;
+            filter: alpha(opacity=0);
+            cursor: pointer;
+            z-index: -1;
+        }
+
+        input[type=checkbox]:checked+.ui-switch {
+            color: var(--ui-info, #2d8cf0);
+        }
+
+        input[type=checkbox]:checked+.ui-switch::before {
+            margin-left: 18px;
+        }
+
+        input[type=checkbox]:checked+.ui-checkbox {
+            color: var(--ui-info, #2d8cf0);
+            background-color: var(--ui-info, #2d8cf0);
+        }
+
+        input[type=checkbox]:checked+.ui-checkbox::after {
+            visibility: visible;
+            -webkit-animation: bounceIn 0.2s;
+            animation: bounceIn 0.2s;
+        }
+
+        input[type=checkbox]:active+.ui-switch::before {
+            box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type=checkbox]+.ui-switch {
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            border: 2px solid;
+            border-radius: 22px;
+            background-color: currentColor;
+            box-sizing: border-box;
+            vertical-align: text-top;
+            color: #b6bbc6;
+            -webkit-transition: all 0.2s;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        input[type=checkbox]+.ui-switch::before {
+            content: '';
+            display: block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--ui-bg, #ffffff);
+            -webkit-transition: margin-left 0.2s;
+            transition: margin-left 0.2s;
+        }
+
+        input[type=checkbox]+.ui-checkbox {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            box-sizing: border-box;
+            box-shadow: inset 0 1px, inset 1px 0, inset -1px 0, inset 0 -1px;
+            background-color: var(--ui-bg, #ffffff);
+            background-clip: content-box;
+            color: #d0d0d5;
+            -webkit-transition: color 0.2s, background-color 0.1s;
+            transition: color 0.2s, background-color 0.1s;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            vertical-align: -5px;
+            *vertical-align: 0;
+            overflow: hidden;
+        }
+
+        input[type=checkbox]+.ui-checkbox::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4NCjxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0xNDcuNTY3LDY3LjU3NWMtMy45NzgtMy4yNDEtNC4zNTYtMy4zMzctOC45LTUuNjM5Yy0yLjA0NC0xLjA0NC01LjA1NywxLjY0NS02LjUzLDMuNjM1TDkyLDExNy43MjgNCglMNjUuODUxLDgzLjk3M2MtMS40NzktMS45ODgtNC4yMDYtMi43Mi02LjI1MS0xLjc4MmMtNC42NTgsMi40MDctNC4xODksMi4zMjYtOC4xNjgsNS40NjZjLTEuODE3LDEuNDY2LTEuOTMyLDQuMDgyLTAuNDU2LDYuMDY1DQoJYzAsMCwyOC4xODMsMzYuNDk5LDMxLjU5Miw0MC44OTZjNC45OTksNi4yNzUsMTQuMDksNS45NjUsMTguODY0LDBjMy41Mi00LjQ5OCw0Ni41OS02MS4wNzgsNDYuNTktNjEuMDc4DQoJQzE0OS40OTksNzEuNTQ5LDE0OS4zODUsNjguOTM3LDE0Ny41NjcsNjcuNTc1eiIvPg0KPC9zdmc+DQo=) no-repeat center;
+            background-size: 20px 20px;
+            visibility: hidden;
+        }
+
+        input[type=checkbox]+.ui-checkbox:hover {
+            background-position: 0 -20px;
+        }
+
+        input[type=checkbox]+.ui-checkbox+label {
+            margin: 0 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            background: transparent;
+            padding: 0 0.5em;
+            width: 100%;
+            height: 2.4em;
+            color: var(--color-font, #000);
+            border-radius: var(--ui-border-radius, 4px);
+            transition: all var(--ui-transition-duration, 0.3s ease);
+            border: var(--ui-input-border, 0.5px solid var(--ui-form-control-line, #e6e6e6));
+            box-shadow: var(--ui-input-box-shadow);
+            background: var(--ui-input-background-color);
+        }
+
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        input[type="password"]:hover {
+            border-color: var(--ui-form-control-line-hover, #acafb4);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus {
+            outline-offset: 0px;
+            outline: none;
+            border-color: var(--ui-form-control-line-active, #0b4888);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        input[type="password"]::placeholder {
+            color: var(--ui-aide-text, #8a8e99);
+            font-size: 0.9em;
+        }
+
+        label {
+            user-select: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="config">
+        <div class="header">
+            <h3>设置</h3>
+            <span>
+                <svg id="closeBtn" t="1669383854852" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg" p-id="2713" width="200" height="200">
+                    <path
+                        d="M591.54101563 512L889.05078125 214.40234375c21.97265625-21.97265625 21.97265625-57.56835938 0-79.54101563s-57.56835938-21.97265625-79.54101563 1e-8L512 432.45898437 214.40234375 134.94921875c-21.97265625-21.97265625-57.56835938-21.97265625-79.54101563 0s-21.97265625 57.56835938 1e-8 79.54101563L432.45898437 512 134.94921875 809.59765625c-21.97265625 21.97265625-21.97265625 57.56835938 0 79.54101563 10.98632813 10.98632813 25.40039063 16.43554688 39.7265625 16.43554687s28.74023438-5.44921875 39.7265625-16.43554688L512 591.54101563 809.59765625 889.05078125c21.97265625 21.97265625 57.56835938 21.97265625 79.54101563 0 10.98632813-10.98632813 16.43554688-25.40039063 16.43554687-39.7265625s-5.44921875-28.74023438-16.43554688-39.7265625L591.54101563 512z"
+                        p-id="2714"></path>
+                </svg>
+            </span>
+        </div>
+        <div class="config-area">
+            <div class="config-item">
+                <div class="config-item-label">预览模式</div>
+                <div class="config-item-value">
+                    <label for="previewMode">普遍模式</label>
+                    <input style="margin: 0 2px;" id="previewMode" type="checkbox">
+                    <label for="previewMode" class="ui-switch"></label>
+                    <label for="previewMode">瀑布流模式</label>
+                </div>
+            </div>
+            <div class="config-item">
+                <div class="config-item-label">开机启动</div>
+                <div class="config-item-value">
+                    <input id="openAtLogin" type="checkbox">
+                    <label for="openAtLogin" class="ui-switch"></label>
+                    <!-- <br>
+                    <div class="button"
+                        style="background-color: #ea1b1b;color: #e4e4e4;border-color:#ea1b1b;margin-top: 20px;">
+                        清理缓存
+                    </div> -->
+                </div>
+            </div>
+            <div class="config-item">
+                <div class="config-item-label">下载目录</div>
+                <div class="config-item-value">
+                    <div style="margin-bottom: 20px;max-height: 80px;overflow: hidden;">
+                        <span>当前目录：</span>
+                        <span id="downloadPath" style="word-break: break-all;"></span>
+                    </div>
+                    <div>
+                        <div id="updateDownloadPath" class="button">修改目录</div>
+                        <div id="openDownloadPath" class="button">打开文件位置</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let appConfig = window.store.appConfig
+        let config = appConfig.get()
+
+        let closeBtn = document.getElementById("closeBtn")
+        closeBtn.addEventListener("click", function () {
+            window.send.close()
+        })
+
+        // 设置浏览模式
+        let previewMode = document.getElementById("previewMode")
+        previewMode.checked = config['previewMode'] === "waterfall"
+        previewMode.addEventListener("change", function (e) {
+            appConfig.set('previewMode', this.checked ? "waterfall" : "tile")
+        })
+
+        let downloadPath = document.getElementById("downloadPath")
+        downloadPath.innerText = config['downloadPath']
+
+        // 设置地址
+        let updateDownloadPath = document.getElementById('updateDownloadPath')
+        updateDownloadPath.addEventListener("click", function () {
+            window.send.set_path().then(data => {
+                if (!data.canceled) {
+                    appConfig.set('downloadPath', data.filePaths[0])
+                    downloadPath.innerText = data.filePaths[0]
+                }
+            })
+        })
+
+        // 打开地址
+        let openDownloadPath = document.getElementById('openDownloadPath')
+        openDownloadPath.addEventListener("click", function () {
+            window.send.open_path()
+        })
+
+        let openAtLogin = document.getElementById('openAtLogin')
+        openAtLogin.checked = config['openAtLogin']
+        openAtLogin.addEventListener("change", function (e) {
+            appConfig.set('openAtLogin', this.checked)
+        })
+
+    </script>
+</body>
+
+</html>

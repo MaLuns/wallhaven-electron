@@ -12,8 +12,10 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "electron-store": "^8.1.0",
     "element-ui": "^2.13.2",
     "vue": "^2.6.11",
+    "vue-router": "^3.6.5",
     "wallpaper": "^5.0.1"
   },
   "devDependencies": {
@@ -36,7 +38,9 @@
     "productName": "one-wallhaven",
     "files": {
       "filter": [
-        "!**/node_modules/*"
+        "!**/node_modules/*",
+        "!**/layout/*",
+        "!**/public/*"
       ]
     },
     "directories": {

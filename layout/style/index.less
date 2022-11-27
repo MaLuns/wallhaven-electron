@@ -1,0 +1,134 @@
+* {
+    padding              : 0;
+    margin               : 0;
+    user-select          : none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select  : none !important;
+}
+
+body {
+    background-color: rgb(0, 0, 0);
+    width           : 100vw;
+    height          : 100vh;
+    overflow        : hidden;
+}
+
+::-webkit-scrollbar {
+    width : 0px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    filter       : blur(10px);
+    background   : #979fda40;
+    cursor       : pointer;
+}
+
+.el-message {
+    min-width: 0;
+    padding  : 8px 10px;
+    left     : 260px;
+    right    : 0;
+    margin   : 0 auto;
+    width    : fit-content;
+    top      : 80px !important;
+}
+
+.el-message--success {
+    background-color: #fff;
+    border-color    : #fff;
+
+    .el-icon-success {
+        color: #38acfa;
+    }
+
+    .el-message__content {
+        color: rgb(41, 41, 41);
+    }
+}
+
+@bgColor    : #323135;
+@bgTheme    : rgba(65, 63, 63, 0.623);
+@color      : #eee;
+@box-shadow : 0 0 10px 0 #07182b5e;
+
+
+.el-select,
+.el-input-group {
+    box-shadow: @box-shadow;
+}
+
+.el-select-dropdown,
+.el-input__inner {
+    color      : #e0d9d9;
+    background : @bgColor;
+    border     : none;
+    user-select: none;
+
+    :host {
+        user-select: none;
+    }
+}
+
+.el-input-group__append {
+    background: rgba(0, 0, 0, 0.623);
+    border    : none;
+}
+
+.popper__arrow {
+    border-bottom-color: @bgColor  !important;
+
+    &::after {
+        border-bottom-color: @bgColor  !important;
+    }
+}
+
+.el-select-dropdown__item {
+    color: #c3c3c3;
+
+    &.selected,
+    &.hover,
+    &:hover {
+        color     : #faf9f9;
+        background: @bgColor;
+        border    : none;
+    }
+}
+
+.el-loading-mask {
+    background-color    : rgba(0, 0, 0, 0.1);
+    /*  pointer-events  : none; */
+}
+
+.el-badge__content {
+    border: none;
+}
+
+
+.mp(@name, @val, @prefix) {
+    @mapss: {
+        right : r;
+        left  : l;
+        top   : t;
+        bottom: b;
+    }
+
+    each(@mapss, {
+
+            .@{name}@{value}@{val} {
+                @{prefix}-@{key}: @val*1px;
+            }
+        }
+
+    )
+}
+
+@numbers: 10, 20, 30;
+
+each(@numbers, {
+        .mp(m, @value, margin);
+        .mp(p, @value, padding);
+    }
+
+);

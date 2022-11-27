@@ -1,4 +1,4 @@
-﻿const { app, BrowserWindow } = require('electron');
+﻿const { app, BrowserWindow, Tray, Menu, nativeImage } = require('electron');
 
 //获取单例锁
 const gotTheLock = app.requestSingleInstanceLock()
@@ -6,23 +6,24 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
     app.quit()
 } else {
-    const { mainWindowIpcStart } = require("./lib/ipcMain")
+    const Store = require('electron-store');
+    // 初始化 electron-store  需在主进程
+    Store.initRenderer();
+
     const path = require('path');
     global.appDirname = __dirname;
-
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
-    let winURL = path.resolve(__dirname, "../renderer/index.html");
+    let baseURL = path.resolve(__dirname, "../renderer");
     let mainWindow;
+    let configWindow;
+    let tray;
 
-    function createWindow() {
+    const createWindow = () => {
         const win = new BrowserWindow({
             width: 1580,
             height: 888,
-            //resizable: false,
-            //useContentSize: true,
-            /* transparent: true, */
-
+            backgroundColor: "#201f29",
             icon: path.resolve(__dirname, "./icon/logo.png"),
             frame: false,
             show: false,
@@ -32,13 +33,8 @@ if (!gotTheLock) {
             }
         })
 
-        /* win.maximize(); */
-        // console.log(app.isPackaged)
-
-        mainWindowIpcStart(win)
-
         if (app.isPackaged) {
-            win.loadURL(`file://${winURL}`)
+            win.loadURL(`file://${baseURL}/index.html`)
         } else {
             win.loadURL("http://localhost:8080")
             win.webContents.openDevTools()
@@ -50,9 +46,117 @@ if (!gotTheLock) {
         return win
     }
 
+    const createConfigWindow = () => {
+        const win = new BrowserWindow({
+            width: 450,
+            height: 340,
+            maxWidth: 450,
+            maxHeight: 340,
+            maximizable: false,
+            icon: path.resolve(__dirname, "./icon/logo.png"),
+            resizable: false,
+            show: false,
+            frame: false,
+            transparent: true,
+            backgroundColor: "#00ffffff",
+            fullscreenable: false,
+            webPreferences: {
+                preload: path.resolve(__dirname, "./lib/preload.js"),
+            }
+        })
 
-    app.on("ready", function () {
-        mainWindow = new createWindow();
+        if (app.isPackaged) {
+            win.loadURL(`file://${baseURL}/config.html`)
+        } else {
+            win.loadURL("http://localhost:8080/config.html")
+        }
+
+        win.on('closed', () => { mainWindow = null; })
+        win.on('ready-to-show', () => { win.show() })
+
+        return win;
+    }
+
+    const createDynamicWallpaper = () => {
+        const win = new BrowserWindow({
+            resizable: false,
+            frame: false,
+            show: false,
+            fullscreen: true,
+            type: "desktop",
+            webPreferences: {
+                devTools: false
+            }
+        })
+
+
+        if (app.isPackaged) {
+            win.loadURL(`file://${baseURL}`)
+        } else {
+            win.loadURL("http://localhost:8080")
+        }
+
+        win.on('ready-to-show', () => { win.show() })
+
+        return win
+    }
+
+    const createTray = () => {
+        const icon = nativeImage.createFromPath(path.resolve(__dirname, "./icon/logo.png"))
+        tray = new Tray(icon)
+
+        const contextMenu = Menu.buildFromTemplate([
+            {
+                label: '打开壁纸程序', type: 'normal',
+                click: () => {
+                    mainWindow.show()
+                }
+            },
+            /* { label: '刷新壁纸', type: 'normal' }, */
+            {
+                label: '设置', type: 'normal',
+                click: () => {
+                    if (configWindow) {
+                        configWindow.show()
+                    } else {
+                        configWindow = createConfigWindow()
+                    }
+                }
+            },
+            { label: '退出', type: 'normal', role: "quit" }
+        ])
+
+        tray.setContextMenu(contextMenu)
+
+        tray.setToolTip('This is my application')
+    }
+
+    const init = () => {
+        require("./lib/ipcMain")
+        const { db } = require('./lib/database')
+        const { downloadPath } = db.appConfig.get()
+
+        if (!downloadPath) {
+            app.setPath('downloads', downloadPath)
+        } else {
+            db.appConfig.set('downloadPath', app.getPath('downloads'))
+        }
+
+        db.appConfig.onDidChange("downloadPath", function (newValue) {
+            app.setPath('downloads', newValue)
+        })
+
+        db.appConfig.onDidChange("openAtLogin", function (newValue) {
+            app.setLoginItemSettings({
+                openAtLogin: newValue
+            })
+        })
+    }
+
+    app.whenReady().then(() => {
+        init()
+        mainWindow = createWindow();
+        createTray()
     })
 
     app.on('second-instance', (event, commandLine, workingDirectory) => {
