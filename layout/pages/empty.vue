@@ -1,15 +1,14 @@
 <template>
     <div class="empty">
         <img :src="empty" alt draggable="false" />
-        <div>{{ title }}</div>
+        <div class="mt20">{{ title }}</div>
     </div>
 </template>
 
 <script>
-import empty from "@/assets/empty.svg"
+import empty from "@/assets/empty.png"
 
 export default {
-    name: "EmptyPage",
     data() {
         return {
             empty
@@ -18,7 +17,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: "这里什么也没有 ~"
+            default: "功能开发中 ~"
         }
     }
 }
@@ -31,7 +30,6 @@ export default {
     justify-content: center;
     height: 600px;
     flex-direction: column;
-    color: #ffffff55;
     font-size: 16px;
     line-height: 30px;
 }

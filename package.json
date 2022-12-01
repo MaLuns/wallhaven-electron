@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "electron-store": "^8.1.0",
-    "element-ui": "^2.13.2",
     "vue": "^2.6.11",
     "vue-router": "^3.6.5",
     "wallpaper": "^5.0.1"
@@ -31,7 +30,7 @@
     "name": "mal",
     "email": "admin@imlaun.com"
   },
-  "homepage": "http://www.www.com",
+  "homepage": "http://www.imalun.com",
   "build": {
     "appId": "com.imalun.one-wallhaven",
     "copyright": "©2019 MAL. All rights reserved.",

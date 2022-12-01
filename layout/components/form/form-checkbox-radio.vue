@@ -1,31 +1,41 @@
 <template>
-    <div class="respicker-panel">
-        <div v-for="item in list" class="respicker-label-group">
-            <div class="respicker-label-group-title">
-                <slot name="title" v-bind="item">{{ item.title }}</slot>
-            </div>
-            <div>
-                <div v-for="i, idx in item.children" :key="idx" class="respicker-label-item"
-                    :class="{ active: isChecked(i) }" @click="handleClick(i)">
-                    <slot name="item" v-bind="{ item: i, index: idx }">
-                        {{ i.label || i }}
-                    </slot>
-                </div>
+    <div class="checkbox-radio-group" :class="view">
+        <div class="checkbox-radio-label" v-if="view === 'view'">
+            <slot name="label">{{ label }}</slot>
+        </div>
+        <div class="checkbox-radio-value" v-if="view === 'view'">
+            <div class="checkbox-radio-item" :class="{ active: isChecked(item) }" v-for="item, index in list"
+                :key="index" @click="handleClick(item)" :style="{ width }">
+                <slot v-bind="{ color: item }">
+                    {{ item.label || item }}
+                </slot>
             </div>
         </div>
+        <template v-else>
+            <div class="checkbox-radio-button" :class="{ active: isChecked(item) }" v-for="item, index in list"
+                :key="index" @click="handleClick(item)">
+                {{ item.label || item }}
+            </div>
+        </template>
     </div>
 </template>
 <script>
 export default {
-    name: "FormCheckPanel",
+    name: "FormCheckboxRadio",
     model: {
         prop: 'checked',
         event: 'change'
     },
     props: {
+        label: String,
         checked: {
             type: [Array, String],
             default: () => ([])
+        },
+        view: {
+            type: String,
+            default: 'view',
+            validator: value => ['view', 'button'].includes(value)
         },
         type: {
             type: String,
@@ -35,7 +45,8 @@ export default {
         list: {
             type: Array,
             default: () => ([])
-        }
+        },
+        width: String
     },
     watch: {
         type(val) {
@@ -72,35 +83,5 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.respicker-panel {
-    display: flex;
-
-    .respicker-label-group {
-        flex: 1;
-        text-align: center;
-        margin: 0 2px;
-
-        .respicker-label-group-title {
-            margin-bottom: 5px;
-        }
-    }
-
-    .respicker-label-item {
-        cursor: pointer;
-        border-radius: 4px;
-        padding: 6px 10px;
-        border: 1px solid var(--respicker-border-color);
-        color: var(--respicker-color);
-
-        +.respicker-label-item {
-            margin-top: 5px;
-        }
-
-        &.active {
-            color: var(--respicker-acvite-color);
-            border: 1px solid var(--respicker-acvite-border-color);
-            background-color: var(--respicker-acvite-bg-color);
-        }
-    }
-}
+@import "./checkbox-radio.less";
 </style>

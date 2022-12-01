@@ -1,34 +1,34 @@
 <template>
     <div class="app">
-        <layout-aside></layout-aside>
-        <main class="main">
+        <layout-nav>
             <layout-header></layout-header>
-            <div class="component">
-                <transition name="slide-fade">
-                    <keep-alive>
-                        <router-view class="page-component"></router-view>
-                    </keep-alive>
-                </transition>
-            </div>
+        </layout-nav>
+        <main class="main">
+            <!-- <transition name="slide-fade"> -->
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
+            <!-- </transition> -->
         </main>
         <img-view :data="view"></img-view>
-        <div class="app-bg"></div>
     </div>
 </template>
 
 <script>
-import LayoutAside from "./layout-aside"
 import LayoutHeader from "./layout-header"
+import LayoutNav from "./layout-nav"
 
 export default {
     name: "App",
     components: {
-        LayoutAside,
+        LayoutNav,
         LayoutHeader
     },
     data() {
         return {
-            view: {}
+            view: {
+                id: ""
+            }
         };
     },
     mounted() {
@@ -43,52 +43,17 @@ export default {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    display: flex;
     box-shadow: 8px 8px 10px grey;
+    background-color: var(--bg-color);
 
     .main {
-        flex: 1;
+        height: calc(100vh - var(--layout-header-height));
+        position: relative;
         overflow: hidden;
-
-       
-        .component {
-            height: calc(100% - 40px);
-            position: relative;
-
-            .page-component {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-        }
-    }
-
-    .app-bg {
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-        background-color: #0c0e29;
-        background-image: url(../assets/bg.jpg);
-        background-size: 100% 100%;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        transition: background 0.8s;
-
-        &::before {
-            content: "";
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            backdrop-filter: blur(20px);
-        }
     }
 }
 
-.slide-fade-leave-active,
+/* .slide-fade-leave-active,
 .slide-fade-enter-active {
     transition: all 0.4s;
 }
@@ -102,5 +67,5 @@ export default {
 
 .slide-fade-leave-to {
     position: absolute;
-}
+} */
 </style>

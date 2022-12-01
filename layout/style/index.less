@@ -1,3 +1,5 @@
+@import url(./variables.less);
+
 * {
     padding              : 0;
     margin               : 0;
@@ -7,45 +9,66 @@
 }
 
 body {
-    background-color: rgb(0, 0, 0);
     width           : 100vw;
     height          : 100vh;
     overflow        : hidden;
+    background-color: var(--bg-color);
+    color           : var(--font-color);
 }
 
 ::-webkit-scrollbar {
-    width : 0px;
+    width : 6px;
     height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
     filter       : blur(10px);
-    background   : #979fda40;
     cursor       : pointer;
+    background   : #979fda40;
+    margin-right : 5px;
 }
 
-.el-message {
-    min-width: 0;
-    padding  : 8px 10px;
-    left     : 260px;
-    right    : 0;
-    margin   : 0 auto;
-    width    : fit-content;
-    top      : 80px !important;
+.one-border {
+    border       : 2px solid #3da7fe;
+    border-radius: 16px;
+
+    &::before {
+        content         : '';
+        position        : absolute;
+        top             : -1px;
+        height          : 6px;
+        width           : calc(100% - 6px);
+        left            : 0;
+        right           : 0;
+        margin          : 0 auto;
+        background-color: #3da7fe;
+        border-radius   : 16px 16px 0 0;
+    }
+
+    &.bottom::before {
+        top          : auto;
+        bottom       : -1px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    &.left::before {
+        height: 100%;
+        width : 6px;
+    }
+
+    &.right::before {
+        height: 100%;
+        width : 6px;
+        left  : auto;
+        right : 0;
+    }
 }
 
-.el-message--success {
-    background-color: #fff;
-    border-color    : #fff;
-
-    .el-icon-success {
-        color: #38acfa;
-    }
-
-    .el-message__content {
-        color: rgb(41, 41, 41);
-    }
+.message-fade-enter,
+.message-fade-leave-active {
+    opacity  : 0;
+    transform: translate(50%, -80%);
 }
 
 @bgColor    : #323135;
@@ -54,57 +77,10 @@ body {
 @box-shadow : 0 0 10px 0 #07182b5e;
 
 
-.el-select,
-.el-input-group {
-    box-shadow: @box-shadow;
-}
-
-.el-select-dropdown,
-.el-input__inner {
-    color      : #e0d9d9;
-    background : @bgColor;
-    border     : none;
-    user-select: none;
-
-    :host {
-        user-select: none;
-    }
-}
-
-.el-input-group__append {
-    background: rgba(0, 0, 0, 0.623);
-    border    : none;
-}
-
-.popper__arrow {
-    border-bottom-color: @bgColor  !important;
-
-    &::after {
-        border-bottom-color: @bgColor  !important;
-    }
-}
-
-.el-select-dropdown__item {
-    color: #c3c3c3;
-
-    &.selected,
-    &.hover,
-    &:hover {
-        color     : #faf9f9;
-        background: @bgColor;
-        border    : none;
-    }
-}
-
 .el-loading-mask {
-    background-color    : rgba(0, 0, 0, 0.1);
+    background-color    : rgba(0, 0, 0, 0.616);
     /*  pointer-events  : none; */
 }
-
-.el-badge__content {
-    border: none;
-}
-
 
 .mp(@name, @val, @prefix) {
     @mapss: {

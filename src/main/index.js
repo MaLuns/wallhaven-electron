@@ -1,4 +1,4 @@
-﻿const { app, BrowserWindow, Tray, Menu, nativeImage } = require('electron');
+﻿const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require('electron');
 
 //获取单例锁
 const gotTheLock = app.requestSingleInstanceLock()
@@ -21,8 +21,8 @@ if (!gotTheLock) {
 
     const createWindow = () => {
         const win = new BrowserWindow({
-            width: 1580,
-            height: 888,
+            width: 1300,
+            height: 800,
             backgroundColor: "#201f29",
             icon: path.resolve(__dirname, "./icon/logo.png"),
             frame: false,
@@ -150,6 +150,14 @@ if (!gotTheLock) {
             app.setLoginItemSettings({
                 openAtLogin: newValue
             })
+        })
+
+        ipcMain.handle("open_config", () => {
+            if (configWindow) {
+                configWindow.show()
+            } else {
+                configWindow = createConfigWindow()
+            }
         })
     }
 

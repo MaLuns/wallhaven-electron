@@ -1,7 +1,7 @@
 <template>
     <div v-if="show" class="animation-content" ref="animationContent">
         <!-- <div style="backdrop-filter:blur(20px);position: absolute;width: 100%;height: 100%;"></div> -->
-        <div class="img-view" ref="imgContent" v-loading="loading">
+        <div class="img-view" ref="imgContent">
             <img @error="handleError" ref="img" draggable="false" v-dragwidth :style="imgStyle" :src="path" />
             <div class="zoom-bage">{{ zoom }}</div>
         </div>
@@ -9,7 +9,7 @@
             <div @click="handleClose" class="iconfont icon-guanbi"></div>
             <div title="还原" class="iconfont icon-huifu" @click="handleRef"></div>
             <div title="下载" class="iconfont icon-xiazai" @click="handleDownFile()"></div>
-            <div title="设为壁纸" class="iconfont icon-tupian" @click="handleSetwallpaper()"></div>
+            <div title="设为壁纸" class="iconfont icon-zhuomian" @click="handleSetwallpaper()"></div>
             <div title="取消收藏" v-if="getCollection(data.id)" @click="handleRemoveCollection(data)"
                 class="iconfont icon-collection-b shoucang"></div>
             <div title="收藏" v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
@@ -27,7 +27,6 @@ export default {
     name: "ImgView",
     data() {
         return {
-            loading: false,
             show: false,
             path: '',
             zoom: 0,// 缩放比 %
@@ -70,10 +69,10 @@ export default {
     },
     methods: {
         init() {
-            let { thumbs_height, thumbs_width, original, dimension_x, dimension_y, path, ratio, rect } = this.data;
+            let { thumbs_height = 200, thumbs_width = 300, thumbs, original, dimension_x, dimension_y, path, ratio, rect } = this.data;
             let { clientWidth, clientHeight } = this
             this.show = true;
-            this.path = original;
+            this.path = original || thumbs.small;
             this.originalW = dimension_x;
             this.imgStyle = {
                 width: thumbs_width + 'px',
@@ -97,28 +96,24 @@ export default {
                 animate.onfinish = () => {
                     const { width, height } = aspectRatioToWH(clientWidth - 200, clientHeight - 200, ratio, dimension_x, dimension_y)
 
-                    this.loading = true;
                     this.$refs.imgContent.addEventListener("wheel", this.setImgWH);
                     this.minImg = { width, height }
                     this.zoom = parseInt(width / dimension_x * 100)
 
                     getImgBlod(path).then(res => {
+                        /* setTimeout(() => { */
+                        this.imgStyle = {
+                            width: width + 'px',
+                            height: height + 'px',
+                            transform: `translate(${(clientWidth - width) / 2}px, ${(clientHeight - height) / 2}px)`
+                        }
+                        /* }, 300) */
                         this.path = res;
-                        setTimeout(() => {
-                            this.loading = false;
-                            this.imgStyle = {
-                                width: width + 'px',
-                                height: height + 'px',
-                                transform: `translate(${(clientWidth - width) / 2}px, ${(clientHeight - height) / 2}px)`
-                            }
-
-                            // this.$refs.animationContent.style['background-color'] = 'rgba(31, 31, 31, .7)';
-                            // this.$refs.animationContent.style['backdrop-filter'] = 'blur(20px)';
-                        }, 300)
+                        // this.$refs.animationContent.style['background-color'] = 'rgba(31, 31, 31, .7)';
+                        // this.$refs.animationContent.style['backdrop-filter'] = 'blur(20px)';
 
                     }).catch(res => {
-                        //this.$message.error('图片加载失败')
-                        this.loading = false;
+                        this.$message.error('图片加载失败')
                     })
                 };
 
@@ -131,7 +126,7 @@ export default {
                 width: width + 'px',
                 height: height + 'px',
                 transform: `translate(${(clientWidth - width) / 2}px, ${(clientHeight - height) / 2}px)`
-            }        
+            }
             this.$refs.img.style.transform = this.imgStyle.transform
         },
         // 图片加载失败
@@ -207,14 +202,16 @@ export default {
             let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
             if (/^blob:/.test(this.path)) {
                 const downPath = localStorage.getItem('downloads');
-                const name = `one- ${id}${url.substr(url.lastIndexOf('.'))}`;
+                const name = `wallhaven-${id}${url.substr(url.lastIndexOf('.'))}`;
                 const a = document.createElement("a")
                 a.href = this.path
                 a.download = name
                 a.click()
                 setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
                 const path = downPath + '\\' + name
-                this.$root.downDoneFiles.splice(0, 0, { id, resolution, size, small, url, downloadtime: getTime(), path })
+                this.$store.downDoneFiles.set(id, {
+                    id, resolution, size, small, url, downloadtime: getTime(), path
+                })
                 if (isSetWallpaper) {
                     setWallpaper(path)
                     this.$message({ message: "设置成功", type: "success", duration: 2000 });
@@ -228,7 +225,7 @@ export default {
         },
         // 获取收藏状态
         getCollection(id) {
-            return this.$store.collections.has(id)
+            return this.$root.collections.findIndex(item => item === id) > -1
         },
     },
     directives: {
@@ -272,14 +269,14 @@ export default {
 
 <style lang="less" scoped>
 .animation-content {
-    background-color: #102148de;
+    background-color: var(--mask-bg-color);
     position: fixed;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
+    z-index: 10;
     overflow: hidden;
-    /* transition: background-color 1s; */
-    /* backdrop-filter: blur(20px); */
+    top: 0;
+    left: 0;
 
     .img-view {
         position: relative;
@@ -308,7 +305,6 @@ export default {
         right: 20px;
         top: 50vh;
         transform: translateY(-50%);
-        color: #ffffff9e;
         z-index: 9999;
 
         div {
@@ -325,7 +321,7 @@ export default {
             }
 
             &.shoucang {
-                color: #38acfa;
+                color: var(--button-hover-font-color);
 
                 &:hover {
                     color: #ffffff;

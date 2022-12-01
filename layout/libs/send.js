@@ -6,12 +6,6 @@
 export const downFile = (obj) => window.send.down_file(obj)
 
 /**
- * 更新下载状态
- * @param {*} cb 
- */
-export const updateDownState = (cb) => window.handle.update_down_state(cb)
-
-/**
  * 暂停下载
  * @param {*} url 
  */
@@ -54,3 +48,9 @@ export const openPath = (path) => window.send.open_path(path)
  * @param {*} cb 
  */
 export const setWallpaper = (path) => window.send.set_wallpaper(path)
+
+/**
+ * 打开配置页
+ * @returns 
+ */
+export const openConfig = () => window.send.open_config()

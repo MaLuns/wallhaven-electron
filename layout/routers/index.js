@@ -1,6 +1,11 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 import layout from "../layouts/main"
+import recommendImg from '../assets/nav/recommend.png'
+import wallpaperImg from '../assets/nav/wallpaper.png'
+import componentImg from '../assets/nav/component.png'
+import myImg from '../assets/nav/my.png'
+
 
 Vue.use(VueRouter);
 
@@ -9,42 +14,61 @@ export const routes = [
         path: "/",
         component: layout,
         meta: {
-            title: "在线壁纸",
+            title: "推荐",
+            icon: recommendImg
         },
         children: [
             {
                 path: "/",
-                name: "home",
+                name: "recommend",
                 meta: {
-                    title: "热门推荐",
-                    icon: "icon-remen",
+                    title: "推荐",
                 },
-                component: () => import("../pages/hot")
-            },
+                component: () => import("../pages/home/index")
+            }
+        ]
+    },
+    {
+        path: "/wallpaper",
+        component: layout,
+        meta: {
+            title: "壁纸",
+            icon: wallpaperImg
+        },
+        children: [
             {
-                path: "/acg",
-                name: "acg",
+                path: "/",
+                name: "wallpaper",
                 meta: {
-                    title: "动漫精选",
-                    icon: "icon-erciyuan",
+                    title: "在线壁纸",
                 },
-                component: () => import("../pages/acg")
-            },
+                component: () => import("../pages/wallpaper/index")
+            }
+        ]
+    },
+    {
+        path: "/component",
+        component: layout,
+        meta: {
+            title: "组件",
+            icon: componentImg
+        },
+        children: [
             {
-                path: "/people",
-                name: "people",
+                path: "/",
+                name: "component",
                 meta: {
-                    title: "人物精选",
-                    icon: "icon-meinv",
+                    title: "桌面组件",
                 },
-                component: () => import("../pages/people")
-            },
+                component: () => import("../pages/empty")
+            }
         ]
     },
     {
         path: "/local",
         meta: {
-            title: "在线壁纸",
+            title: "我的",
+            icon: myImg
         },
         component: layout,
         children: [
@@ -53,7 +77,6 @@ export const routes = [
                 name: "collection",
                 meta: {
                     title: "我的收藏",
-                    icon: "icon-collection-b",
                 },
                 component: () => import("../pages/collection")
             },
@@ -62,27 +85,8 @@ export const routes = [
                 name: "download",
                 meta: {
                     title: "下载中心",
-                    icon: "icon-xiazai",
                 },
                 component: () => import("../pages/download")
-            },
-        ]
-    },
-    {
-        path: "/more",
-        meta: {
-            title: "更多",
-        },
-        component: layout,
-        children: [
-            {
-                path: "/about",
-                name: "about",
-                meta: {
-                    title: "关于",
-                    icon: "icon-guanyu",
-                },
-                component: () => import("../pages/about")
             },
         ]
     },

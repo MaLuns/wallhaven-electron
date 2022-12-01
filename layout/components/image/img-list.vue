@@ -1,14 +1,16 @@
 <template>
     <div ref="visibleContainer" class="visible-container" key="visible-container">
         <template v-if="skeleton">
-            <li v-for="item in 18" :key="item" class="skeleton">
-                <div class="img"></div>
-                <div class="desc">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </li>
+            <div class="skeleton-wrapper">
+                <li v-for="item in 24" :key="item" class="skeleton">
+                    <div class="img"></div>
+                    <div class="desc">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </li>
+            </div>
         </template>
         <template v-else>
             <template v-if="visibleList.length > 0">
@@ -30,7 +32,8 @@
                                 class="iconfont icon-collection-b shoucang"></span>
                             <span title="收藏" :key="item.id + 'cx'" v-else @click="handleAddCollection(item)"
                                 class="iconfont icon-collection-b"></span>
-                            <span title="设为壁纸" class="iconfont icon-tupian" @click="handleDownFile(item, true)"></span>
+                            <span title="设为壁纸" class="iconfont icon-zhuomian"
+                                @click="handleDownFile(item, true)"></span>
                             <span title="下载" class="iconfont icon-xiazai" @click="handleDownFile(item)"></span>
                         </div>
                     </li>
@@ -174,8 +177,8 @@ export default {
             let startIndex = this.catchIndex
             let startItem = this.catchList[startIndex]
             if (!startItem) return;
-            let top = this.scrollTop - this.clientHeight
-            let bottom = this.scrollTop + this.clientHeight * 2
+            let top = this.scrollTop - this.clientHeight * 1.5
+            let bottom = this.scrollTop + this.clientHeight * 2.5
             let len = this.catchList.length
 
             const find = (index, catchList, comparefun) => {
@@ -384,14 +387,9 @@ export default {
 <style lang="less">
 .visible-container {
     height: 100%;
-    margin: 10px 10px 20px;
+    margin: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
-    text-align: center;
-
-    &::-webkit-scrollbar {
-        width: 10px;
-    }
 
     .visible-list {
         position: relative;
@@ -403,7 +401,7 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 3px;
+        border-radius: 8px;
         overflow: hidden;
         transition:
             /* transform .8s ease-in-out, */
@@ -411,20 +409,7 @@ export default {
         z-index: 1;
 
         &:hover {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02),
-                0 16px 32px -4px #000000a3;
-        }
-
-        &::before {
-            content: "";
-            height: 150%;
-            width: 150%;
-            position: absolute;
-            background: rgba(0, 0, 0, 0.205);
-            left: -25%;
-            top: -25%;
-            filter: blur(50px);
-            z-index: -1;
+            box-shadow: var(--card-box-shadow);
         }
 
         .img {
@@ -441,19 +426,20 @@ export default {
             }
 
             .img-info {
-                top: 0;
                 position: absolute;
+                top: 0;
+                line-height: 30px;
                 width: 100%;
                 box-sizing: border-box;
-                line-height: 30px;
-                background: #00000099;
-                position: absolute;
-                color: #ffffffa8;
                 display: flex;
                 justify-content: space-between;
-                padding: 0 10px;
                 transform: translateY(-100%);
                 transition: transform 0.4s;
+                padding: 0 10px;
+                font-weight: 600;
+                opacity: .8;
+                background: var(--card-desc-bg-color);
+                color: var(--card-desc-font-color);
             }
 
             &:hover {
@@ -470,8 +456,8 @@ export default {
         .desc {
             line-height: 40px;
             height: 40px;
-            background: #1e2336;
-            color: #888888;
+            background: var(--card-desc-bg-color);
+            color: var(--card-desc-font-color);
             font-size: 12px;
             padding: 0 10px;
             display: flex;
@@ -479,54 +465,55 @@ export default {
 
             span {
                 cursor: pointer;
+                font-size: 18px;
             }
 
             .shoucang {
-                color: #38acfa;
+                color: var(--button-hover-font-color);
             }
         }
     }
 
-    .skeleton {
-        display: inline-block;
-        margin: 10px;
+    .skeleton-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
 
-        .img {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            background: linear-gradient(60deg,
-                    #18171717 25%,
-                    #0c0c0c17 37%,
-                    #3a3a3a1f 63%);
-            background-size: 400% 100%;
-            animation: skeleton-loading 1.4s ease infinite;
-        }
+        .skeleton {
+            display: inline-block;
+            margin: 0 5px 20px;
 
-        .desc {
-            display: flex;
-            justify-content: space-between;
-            line-height: 40px;
-            height: 40px;
-
-            span {
-                display: inline-block;
-                flex: 1;
-                background: linear-gradient(60deg,
-                        #ffffff17 25%,
-                        #e2e2e217 37%,
-                        #e4e4e41f 63%);
+            .img {
+                position: relative;
+                width: 300px;
+                height: 200px;
+                background: linear-gradient(60deg, #18171717 25%, #0c0c0c17 37%, #3a3a3a1f 63%);
                 background-size: 400% 100%;
-                //animation: skeleton-loading 1.4s ease infinite;
+                animation: skeleton-loading 1.4s ease infinite;
             }
 
-            @keyframes skeleton-loading {
-                0% {
-                    background-position: 100% 50%;
+            .desc {
+                display: flex;
+                justify-content: space-between;
+                line-height: 40px;
+                height: 40px;
+
+                span {
+                    display: inline-block;
+                    flex: 1;
+                    background: linear-gradient(60deg, #ffffff17 25%, #e2e2e217 37%, #e4e4e41f 63%);
+                    background-size: 400% 100%;
+                    //animation: skeleton-loading 1.4s ease infinite;
                 }
 
-                100% {
-                    background-position: 0 50%;
+                @keyframes skeleton-loading {
+                    0% {
+                        background-position: 100% 50%;
+                    }
+
+                    100% {
+                        background-position: 0 50%;
+                    }
                 }
             }
         }

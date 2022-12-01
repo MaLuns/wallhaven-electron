@@ -6,7 +6,9 @@ const defaultsValue = {
     appConfig: {
         previewMode: 'waterfall',
         downloadPath: '',
-        openAtLogin: false
+        openAtLogin: false,
+        theme: 'dark',
+        apiKey: ''
     }
 }
 

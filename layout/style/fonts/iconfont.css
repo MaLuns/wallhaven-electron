@@ -11,6 +11,58 @@
 
 
 
+.icon-zhuomian:before {
+  content: "\e6c2";
+}
+
+.icon-fanhui:before {
+  content: "\e68b";
+}
+
+.icon-xiazai:before {
+  content: "\ee31";
+}
+
+.icon-mohuchaxun:before {
+  content: "\e692";
+}
+
+.icon-shouqi:before {
+  content: "\e608";
+}
+
+.icon-shaixuan-zhankai:before {
+  content: "\e610";
+}
+
+.icon-guanyu1:before {
+  content: "\e60b";
+}
+
+.icon-shezhi:before {
+  content: "\e8b7";
+}
+
+.icon-xitongrizhi:before {
+  content: "\e6a9";
+}
+
+.icon-a-huaban2fuben9:before {
+  content: "\e60f";
+}
+
+.icon-caidan:before {
+  content: "\e602";
+}
+
+.icon-guanbi:before {
+  content: "\e7af";
+}
+
+.icon-shanchu:before {
+  content: "\e695";
+}
+
 .icon-xitongshezhi:before {
   content: "\e618";
 }
@@ -47,10 +99,6 @@
   content: "\e626";
 }
 
-.icon-xiazai:before {
-  content: "\e646";
-}
-
 .icon-kaishi:before {
   content: "\e671";
 }
@@ -81,10 +129,6 @@
 
 .icon-zuixiaohua:before {
   content: "\e629";
-}
-
-.icon-guanbi:before {
-  content: "\e602";
 }
 
 .icon-shoucang:before {

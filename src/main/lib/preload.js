@@ -16,21 +16,12 @@ const invokes = [
     "down_file_resume",
     "down_file_cancel",
     "resume_download",
-    "set_wallpaper"
+    "set_wallpaper",
+    "open_config"
 ]
 invokes.forEach(item => {
     invokesApi[item] = (...res) => ipcRenderer.invoke(item, ...res)
 })
-
-
-// 消息监听
-const handlesApi = {}
-const handles = [
-    'update_down_state'
-]
-handles.forEach(item => {
-    handlesApi[item] = (callback) => ipcRenderer.on(item, callback)
-});
 
 
 // 数据操作
@@ -62,5 +53,4 @@ stores.forEach(name => {
 
 
 contextBridge.exposeInMainWorld('send', invokesApi)
-contextBridge.exposeInMainWorld('handle', handlesApi)
 contextBridge.exposeInMainWorld('store', storesApi)
