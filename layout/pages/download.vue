@@ -44,7 +44,7 @@
                 </div>
             </template>
             <template v-else>
-                <div class="empty">任务队列已经空空如也~</div>
+                <one-result title="任务队列已经空空如也 ~"></one-result>
             </template>
         </div>
         <div class="down-card" v-if="downDoneFiles.length > 0" @click="handleOpen">
