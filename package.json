@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "electron-store": "^8.1.0",
+    "hotkeys-js": "^3.10.1",
     "vue": "^2.6.11",
     "vue-router": "^3.6.5",
     "wallpaper": "^5.0.1"

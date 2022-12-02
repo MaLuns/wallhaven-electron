@@ -2,8 +2,8 @@
     <div class="down-page">
         <!--  <template v-if="$root.downFiles.length>0"> -->
         <div class="down-card">
-            <div class="down-title">
-                <h2 class="title mb20">下载中</h2>
+            <div class="down-title mb20">
+                <h2 class="title">下载中</h2>
                 <p>
                     <span class="path" v-text="path"></span>
                     <span class="btn" @click="handleSetDownPath">修改下载目录</span>
@@ -48,11 +48,9 @@
             </template>
         </div>
         <div class="down-card" v-if="downDoneFiles.length > 0" @click="handleOpen">
-            <div class="down-title">
-                <h2 class="title mb20">已完成</h2>
-                <p>
-                    <span class="btn" @click="handleClear">删除全部记录</span>
-                </p>
+            <div class="down-title mb20">
+                <h2 class="title">已完成</h2>
+                <p><span class="btn" @click="handleClear">删除全部记录</span></p>
             </div>
             <div v-for="img in downDoneFiles" :key="img.id" class="img-item">
                 <div class="img">
