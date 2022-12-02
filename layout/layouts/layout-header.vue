@@ -6,7 +6,7 @@
         </div>
         <div class="opt">
             <form-popover width="180" ref="popover">
-                <div class="opt-btn iconfont icon-caidan" slot="reference"></div>
+                <div class="opt-btn iconfont icon-caidan" title="功能菜单" slot="reference"></div>
                 <div class="dropdown-extended">
                     <div v-for="item in navs" class="menu-nav" @click="handleNavClick(item.type)">
                         <span class="iconfont" :class="item.icon"></span>
@@ -14,8 +14,9 @@
                     </div>
                 </div>
             </form-popover>
-            <span class="opt-btn iconfont icon-zuixiaohua" @click="handleTitleClick('min')"></span>
-            <span class="opt-btn iconfont icon-guanbi" @click="handleTitleClick('close')"></span>
+            <span class="opt-btn iconfont icon-refresh" title="刷新" @click="handleRefresh"></span>
+            <span class="opt-btn iconfont icon-zuixiaohua" title="最小化" @click="handleTitleClick('min')"></span>
+            <span class="opt-btn iconfont icon-guanbi" title="关闭" @click="handleTitleClick('close')"></span>
         </div>
         <ThemeDialog ref="theme"></ThemeDialog>
         <AboutDialog ref="about"></AboutDialog>
@@ -70,6 +71,21 @@ export default {
         }
     },
     methods: {
+        handleRefresh() {
+            let routerView = null
+            const findRouterVuew = (children = []) => {
+                if (children.length) {
+                    children.forEach(item => {
+                        if (item.$refs && item.$refs.routerView) routerView = item.$refs.routerView
+                        if (!routerView) findRouterVuew(item.$children);
+                    })
+                }
+            }
+            findRouterVuew(this.$root.$children)
+            if (routerView && routerView.onRefresh) {
+                routerView.onRefresh.call(routerView)
+            }
+        },
         handleTitleClick(type) {
             window.send[type](type);
         },
@@ -167,7 +183,7 @@ export default {
 
         &:hover,
         &:hover .iconfont {
-            color: var(--button-hover-font-color);
+            color: var(--hover-font-color);
         }
     }
 }

@@ -49,6 +49,12 @@ export default {
         this.getlist();
     },
     methods: {
+        onRefresh() {
+            this.search.categories = '111'
+            this.search.purity = ['SFW']
+            this.search.sorting = "hot"
+            this.handleSearch(this.search)
+        },
         changeCategories(item) {
             this.search.categories = item.value
             this.handleSearch(this.search)
@@ -112,7 +118,7 @@ export default {
                 }
 
                 &:hover {
-                    color: var( --button-hover-font-color);
+                    color: var(--hover-font-color);
                 }
 
                 &.active {
@@ -120,8 +126,6 @@ export default {
                     background-image: url(../../assets/mini.png);
                     background-repeat: no-repeat;
                     background-position: bottom center;
-                    /* background-color: var(--primary);
-                    border-radius: 24px 4px; */
                     font-weight: 600;
                     color: var(--checkbox-view-active-color);
                 }

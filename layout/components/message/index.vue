@@ -72,6 +72,8 @@ export default {
     top: 20px;
     right: 20px;
     min-width: 100px;
+    padding: 0 1.5em;
+    box-sizing: border-box;
     transition: all 0.3s;
     height: 40px;
     line-height: 40px;

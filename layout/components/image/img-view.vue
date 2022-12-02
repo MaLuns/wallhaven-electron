@@ -6,25 +6,28 @@
             <div class="zoom-bage">{{ zoom }}</div>
         </div>
         <div class="btns">
-            <div @click="handleClose" class="iconfont icon-guanbi"></div>
-            <div title="还原" class="iconfont icon-huifu" @click="handleRef"></div>
-            <div title="下载" class="iconfont icon-xiazai" @click="handleDownFile()"></div>
-            <div title="设为壁纸" class="iconfont icon-zhuomian" @click="handleSetwallpaper()"></div>
+            <div @click="handleClose" class="one-button iconfont icon-guanbi"></div>
+            <div title="还原" class="one-button iconfont icon-huifu" @click="handleRef"></div>
+            <div title="下载" class="one-button iconfont icon-xiazai" @click="() => this.handleDownFile(this.data)"></div>
+            <div title="设为壁纸" class="one-button iconfont icon-zhuomian"
+                @click="() => this.handleDownFile(this.data, true)"></div>
             <div title="取消收藏" v-if="getCollection(data.id)" @click="handleRemoveCollection(data)"
-                class="iconfont icon-collection-b shoucang"></div>
-            <div title="收藏" v-else @click="handleAddCollection(data)" class="iconfont icon-collection-b"></div>
+                class="one-button iconfont icon-collection-b shoucang"></div>
+            <div title="收藏" v-else @click="handleAddCollection(data)" class="one-button iconfont icon-collection-b">
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { aspectRatioToWH, getTime } from "@/libs/util";
-import { setWallpaper } from "@/libs/send";
+import { aspectRatioToWH } from "@/libs/util";
 import { getImgBlod } from "@/libs/ajax";
 import errimg from "@/assets/errimg.svg"
+import Minix from './minix'
 
 export default {
     name: "ImgView",
+    mixins: [Minix],
     data() {
         return {
             show: false,
@@ -174,59 +177,7 @@ export default {
         // 关闭
         handleClose() {
             this.show = false;
-        },
-        // 添加收藏
-        handleAddCollection(item) {
-            this.$root.AddCollection(item);
-            this.$message({
-                message: "收藏成功",
-                type: "success",
-                duration: 2000
-            });
-        },
-        // 移除收藏
-        handleRemoveCollection(item) {
-            this.$root.removeCollection(item);
-            this.$message({
-                message: "取消收藏",
-                type: "success",
-                duration: 2000
-            });
-        },
-        // 设置壁纸
-        handleSetwallpaper() {
-            this.handleDownFile(this.data, true);
-        },
-        // 下载
-        handleDownFile(item = this.data, isSetWallpaper = false) {
-            let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-            if (/^blob:/.test(this.path)) {
-                const downPath = localStorage.getItem('downloads');
-                const name = `wallhaven-${id}${url.substr(url.lastIndexOf('.'))}`;
-                const a = document.createElement("a")
-                a.href = this.path
-                a.download = name
-                a.click()
-                setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000)
-                const path = downPath + '\\' + name
-                this.$store.downDoneFiles.set(id, {
-                    id, resolution, size, small, url, downloadtime: getTime(), path
-                })
-                if (isSetWallpaper) {
-                    setWallpaper(path)
-                    this.$message({ message: "设置成功", type: "success", duration: 2000 });
-                } else {
-                    this.$message({ message: "下载成功", type: "success", duration: 2000 });
-                }
-            } else {
-                this.$root.addDownFile({ id, url, size, resolution, small, _img: item, isSetWallpaper })
-                this.$message({ message: "已加入下载", type: "success", duration: 2000 });
-            }
-        },
-        // 获取收藏状态
-        getCollection(id) {
-            return this.$root.collections.findIndex(item => item === id) > -1
-        },
+        }
     },
     directives: {
         dragwidth: {
@@ -291,12 +242,15 @@ export default {
 
         .zoom-bage {
             position: absolute;
-            right: 0px;
-            bottom: 10px;
-            font-size: 14px;
-            color: #fff;
+            right: 0;
+            left: 0;
+            margin: 0 auto;
+            bottom: 20px;
+            color: #cacaca;
             width: 88px;
             text-align: center;
+            font-size: 18px;
+            font-family: fantasy;
         }
     }
 
@@ -313,19 +267,9 @@ export default {
             border-radius: 50%;
             transition: all 0.2s;
             cursor: pointer;
-            background: #8ba9ee4f;
-
-            &:hover {
-                background: #38acfa;
-                color: #ffffff;
-            }
 
             &.shoucang {
-                color: var(--button-hover-font-color);
-
-                &:hover {
-                    color: #ffffff;
-                }
+                color: var(--button-plain-font-color);
             }
         }
     }

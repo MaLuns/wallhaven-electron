@@ -10,12 +10,13 @@ if (!gotTheLock) {
     // 初始化 electron-store  需在主进程
     Store.initRenderer();
 
-    const path = require('path');
     global.appDirname = __dirname;
+    global.mainWindow = null;
+
+    const path = require('path');
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
     let baseURL = path.resolve(__dirname, "../renderer");
-    let mainWindow;
     let configWindow;
     let tray;
 
@@ -40,7 +41,7 @@ if (!gotTheLock) {
             win.webContents.openDevTools()
         }
 
-        win.on('closed', () => { mainWindow = null; })
+        win.on('closed', () => { global.mainWindow = null; })
         win.on('ready-to-show', () => { win.show() })
 
         return win
@@ -71,7 +72,7 @@ if (!gotTheLock) {
             win.loadURL("http://localhost:8080/config.html")
         }
 
-        win.on('closed', () => { mainWindow = null; })
+        win.on('closed', () => { global.mainWindow = null; })
         win.on('ready-to-show', () => { win.show() })
 
         return win;
@@ -101,20 +102,22 @@ if (!gotTheLock) {
         return win
     }
 
-    const createTray = () => {
+    const createTray = async () => {
         const icon = nativeImage.createFromPath(path.resolve(__dirname, "./icon/logo.png"))
         tray = new Tray(icon)
 
         const contextMenu = Menu.buildFromTemplate([
             {
-                label: '打开壁纸程序', type: 'normal',
+                label: '打开壁纸程序',
+                type: 'normal',
+                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/app.png"), { height: 16, width: 16 }),
                 click: () => {
-                    mainWindow.show()
+                    global.mainWindow.show()
                 }
             },
-            /* { label: '刷新壁纸', type: 'normal' }, */
             {
                 label: '设置', type: 'normal',
+                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/setting.png"), { height: 16, width: 16 }),
                 click: () => {
                     if (configWindow) {
                         configWindow.show()
@@ -123,7 +126,12 @@ if (!gotTheLock) {
                     }
                 }
             },
-            { label: '退出', type: 'normal', role: "quit" }
+            {
+                label: '退出',
+                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/exit.png"), { height: 16, width: 16 }),
+                type: 'normal',
+                role: "quit"
+            }
         ])
 
         tray.setContextMenu(contextMenu)
@@ -163,15 +171,15 @@ if (!gotTheLock) {
 
     app.whenReady().then(() => {
         init()
-        mainWindow = createWindow();
+        global.mainWindow = createWindow();
         createTray()
     })
 
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // 当运行第二个实例时,将会聚焦到myWindow这个窗口
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
+        if (global.mainWindow) {
+            if (global.mainWindow.isMinimized()) global.mainWindow.restore()
+            global.mainWindow.focus()
         }
     })
 

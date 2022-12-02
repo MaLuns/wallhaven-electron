@@ -71,15 +71,30 @@ body {
     transform: translate(50%, -80%);
 }
 
-@bgColor    : #323135;
-@bgTheme    : rgba(65, 63, 63, 0.623);
-@color      : #eee;
-@box-shadow : 0 0 10px 0 #07182b5e;
+.one-button {
+    background-color: var(--button-bg-color);
+    color           : var(--button-font-color);
+    border          : 1px solid var(--button-border-color);
+    border-radius   : 4px;
 
+    &:hover {
+        background-color: var(--button-hover-bg-color);
+        color           : var(--button-hover-font-color);
+        border          : 1px solid var(--button-hover-border-color);
+    }
+}
 
-.el-loading-mask {
-    background-color    : rgba(0, 0, 0, 0.616);
-    /*  pointer-events  : none; */
+.one-button-plain {
+    background-color: var(--button-plain-bg-color);
+    color           : var(--button-plain-font-color);
+    border          : 1px solid var(--button-plain-border-color);
+    border-radius   : 4px;
+
+    &:hover {
+        background-color: var(--button-plain-hover-bg-color);
+        color           : var(--button-plain-hover-font-color);
+        border          : 1px solid var(--button-plain-hover-border-color);
+    }
 }
 
 .mp(@name, @val, @prefix) {

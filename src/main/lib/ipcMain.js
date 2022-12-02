@@ -202,7 +202,11 @@ session.defaultSession.on('will-download', (e, item) => {
             }
 
             if (cacheItem.state === 'completed' && cacheItem.isSetWallpaper) {
-                wallpaper.set(cacheItem.path)
+                wallpaper.set(cacheItem.path).then(() => {
+                    if (global.mainWindow) {
+                        global.mainWindow.webContents.send('wallpaper', cacheItem)
+                    }
+                })
             }
 
             //删除缓存

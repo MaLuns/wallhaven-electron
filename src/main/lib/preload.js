@@ -24,6 +24,15 @@ invokes.forEach(item => {
 })
 
 
+// 消息监听
+const handlesApi = {}
+const handles = [
+    "wallpaper"
+]
+handles.forEach(item => {
+    handlesApi[item] = (callback) => ipcRenderer.on(item, callback)
+})
+
 // 数据操作
 const storesApi = {}
 const stores = [...dbNames]
@@ -53,4 +62,5 @@ stores.forEach(name => {
 
 
 contextBridge.exposeInMainWorld('send', invokesApi)
+contextBridge.exposeInMainWorld('handle', handlesApi)
 contextBridge.exposeInMainWorld('store', storesApi)

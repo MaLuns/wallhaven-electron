@@ -2,7 +2,7 @@ import Vue from 'vue'
 import router from "@/routers/index"
 import App from './App.vue'
 import '@/libs/use';
-import { downFile } from '@/libs/send'
+import { downFile, handleWallpaper } from '@/libs/send'
 
 
 new Vue({
@@ -24,6 +24,10 @@ new Vue({
     setTimeout(() => {
       document.body.classList.remove('loading')
     }, 2000);
+
+    handleWallpaper(() => {
+      this.$message.success('壁纸设置成功！')
+    })
   },
   methods: {
     // 添加收藏

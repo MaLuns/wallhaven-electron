@@ -80,7 +80,7 @@ export default {
             font-size: 28px;
 
             &:hover {
-                color: var( --button-hover-font-color);
+                color: var(--hover-font-color);
             }
         }
 
@@ -98,7 +98,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                    color: var( --button-hover-font-color);
+                    color: var(--hover-font-color);
                 }
             }
 

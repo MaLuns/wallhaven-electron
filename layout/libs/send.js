@@ -54,3 +54,10 @@ export const setWallpaper = (path) => window.send.set_wallpaper(path)
  * @returns 
  */
 export const openConfig = () => window.send.open_config()
+
+/**
+ * 壁纸设置完成
+ * @param {*} cb 
+ * @returns 
+ */
+export const handleWallpaper = (cb) => window.handle.wallpaper(cb)

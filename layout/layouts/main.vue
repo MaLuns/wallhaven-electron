@@ -6,7 +6,7 @@
         <main class="main">
             <!-- <transition name="slide-fade"> -->
             <keep-alive>
-                <router-view></router-view>
+                <router-view ref="routerView"></router-view>
             </keep-alive>
             <!-- </transition> -->
         </main>

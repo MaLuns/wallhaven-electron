@@ -20,8 +20,10 @@ export default {
         let list = Object.values(this.$store.collections.store)
         this.show = list.length
         if (this.show) {
-            this.$refs.imglist.add(list, true)
-            this.$refs.imglist.updateVisibleList()
+            this.$nextTick(() => {
+                this.$refs.imglist.add(list, true)
+                this.$refs.imglist.updateVisibleList()
+            })
         }
     }
 };

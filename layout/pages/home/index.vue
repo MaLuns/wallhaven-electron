@@ -1,7 +1,7 @@
 <template>
     <div class="page-component">
         <div v-for="item in l">
-            <div class="title">{{ item.title }}</div>
+            <one-title :title="item.title"></one-title>
             <img-list-horizontal :list="list[item.type]"></img-list-horizontal>
         </div>
     </div>
@@ -38,11 +38,15 @@ export default {
         }
     },
     created() {
-        this.l.forEach(item => {
-            this.getData(item.type)
-        })
+        this.l.forEach(item => this.getData(item.type))
     },
     methods: {
+        onRefresh() {
+            this.l.forEach(item => {
+                this.list[item.type] = []
+                this.getData(item.type)
+            })
+        },
         getData(type) {
             return ajax(`search?sorting=${type}&order=desc&categories=111&purity=110&page=1`)
                 .then(res => {
@@ -66,11 +70,4 @@ export default {
     }
 }
 
-.title {
-    text-align: center;
-    font-size: 20px;
-    line-height: 2;
-    font-weight: bold;
-    margin: 20px 0;
-}
 </style>

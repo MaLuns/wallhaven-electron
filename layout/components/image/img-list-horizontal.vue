@@ -39,8 +39,11 @@
     </div>
 </template>
 <script>
+import Minix from './minix'
+
 export default {
     name: "ImgListHorizontal",
+    mixins: [Minix],
     data() {
         return {
             scroll: 0
@@ -68,31 +71,6 @@ export default {
                 this.vWidth = this.$refs.visibleList.clientWidth
                 this.scroll = Math.min(this.scroll + 400, this.vWidth - this.cWidth)
             }
-        },
-        // 添加收藏
-        handleAddCollection(item) {
-            this.$root.AddCollection(item);
-            this.$message({ message: "收藏成功", type: "success", duration: 2000 });
-        },
-        // 移除收藏
-        handleRemoveCollection(item) {
-            this.$root.removeCollection(item);
-            this.$message({ message: "取消收藏", type: "success", duration: 2000 });
-        },
-        // 获取收藏状态
-        getCollection(id) {
-            return this.$root.collections.findIndex(item => item === id) > -1
-        },
-        //查看
-        handleView(e, item) {
-            let { x, y } = e.target.getClientRects()[0]
-            this.$root.$emit("imgview", { ...item, rect: { x, y } })
-        },
-        // 下载
-        handleDownFile(item, isSetWallpaper = false) {
-            let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
-            this.$root.addDownFile({ id, url, size, resolution, small, _img: item, isSetWallpaper })
-            this.$message({ message: isSetWallpaper ? "壁纸设置中... " : "已加入下载", type: "success", duration: 2000 });
         }
     }
 }
@@ -176,6 +154,7 @@ export default {
                     opacity: .8;
                     background: var(--card-desc-bg-color);
                     color: var(--card-desc-font-color);
+                    font-family: fantasy;
                 }
 
                 &:hover {
@@ -183,9 +162,9 @@ export default {
                         transform: translateY(0);
                     }
 
-                    /* img {
-                    transform: scale(1.1);
-                } */
+                    img {
+                        transform: scale(1.2);
+                    }
                 }
             }
 
@@ -205,7 +184,7 @@ export default {
                 }
 
                 .shoucang {
-                    color: var(--button-hover-font-color);
+                    color: var(--button-plain-font-color);
                 }
             }
 
@@ -246,7 +225,7 @@ export default {
             span {
                 display: inline-block;
                 flex: 1;
-                background: linear-gradient(60deg, #ffffff17 25%, #e2e2e217 37%, #e4e4e41f 63%);
+                background: linear-gradient(60deg, #a0a0a017 25%, #e2e2e217 37%, #e4e4e41f 63%);
                 background-size: 400% 100%;
                 //animation: skeleton-loading 1.4s ease infinite;
             }

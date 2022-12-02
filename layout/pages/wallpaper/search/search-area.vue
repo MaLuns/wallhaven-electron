@@ -163,7 +163,7 @@ export default {
             }
 
             &:hover {
-                color: var( --button-hover-font-color);
+                color: var(--hover-font-color);
             }
         }
 

@@ -11,6 +11,14 @@
 
 
 
+.icon-zuixiaohua:before {
+  content: "\e622";
+}
+
+.icon-refresh:before {
+  content: "\e607";
+}
+
 .icon-zhuomian:before {
   content: "\e6c2";
 }
@@ -125,10 +133,6 @@
 
 .icon-remen:before {
   content: "\e6b2";
-}
-
-.icon-zuixiaohua:before {
-  content: "\e629";
 }
 
 .icon-shoucang:before {
