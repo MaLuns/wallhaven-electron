@@ -1,4 +1,4 @@
-﻿const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require('electron');
+﻿const { app, Tray, Menu, nativeImage, ipcMain } = require('electron');
 
 //获取单例锁
 const gotTheLock = app.requestSingleInstanceLock()
@@ -6,101 +6,21 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
     app.quit()
 } else {
+    const path = require('path');
+    const package = require('../../package.json')
     const Store = require('electron-store');
+    
     // 初始化 electron-store  需在主进程
     Store.initRenderer();
-
+    
     global.appDirname = __dirname;
     global.mainWindow = null;
-
-    const path = require('path');
+    
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-
-    let baseURL = path.resolve(__dirname, "../renderer");
+    const { createConfigWindow, createWindow } = require('./lib/window');
+    
     let configWindow;
     let tray;
-
-    const createWindow = () => {
-        const win = new BrowserWindow({
-            width: 1300,
-            height: 800,
-            backgroundColor: "#201f29",
-            icon: path.resolve(__dirname, "./icon/logo.png"),
-            frame: false,
-            show: false,
-            webPreferences: {
-                preload: path.resolve(__dirname, "./lib/preload.js"),
-                webSecurity: false,
-            }
-        })
-
-        if (app.isPackaged) {
-            win.loadURL(`file://${baseURL}/index.html`)
-        } else {
-            win.loadURL("http://localhost:8080")
-            win.webContents.openDevTools()
-        }
-
-        win.on('closed', () => { global.mainWindow = null; })
-        win.on('ready-to-show', () => { win.show() })
-
-        return win
-    }
-
-    const createConfigWindow = () => {
-        const win = new BrowserWindow({
-            width: 450,
-            height: 340,
-            maxWidth: 450,
-            maxHeight: 340,
-            maximizable: false,
-            icon: path.resolve(__dirname, "./icon/logo.png"),
-            resizable: false,
-            show: false,
-            frame: false,
-            transparent: true,
-            backgroundColor: "#00ffffff",
-            fullscreenable: false,
-            webPreferences: {
-                preload: path.resolve(__dirname, "./lib/preload.js"),
-            }
-        })
-
-        if (app.isPackaged) {
-            win.loadURL(`file://${baseURL}/config.html`)
-        } else {
-            win.loadURL("http://localhost:8080/config.html")
-        }
-
-        win.on('closed', () => { global.mainWindow = null; })
-        win.on('ready-to-show', () => { win.show() })
-
-        return win;
-    }
-
-    const createDynamicWallpaper = () => {
-        const win = new BrowserWindow({
-            resizable: false,
-            frame: false,
-            show: false,
-            fullscreen: true,
-            type: "desktop",
-            webPreferences: {
-                devTools: false
-            }
-        })
-
-
-        if (app.isPackaged) {
-            win.loadURL(`file://${baseURL}`)
-        } else {
-            win.loadURL("http://localhost:8080")
-        }
-
-        win.on('ready-to-show', () => { win.show() })
-
-        return win
-    }
 
     const createTray = async () => {
         const icon = nativeImage.createFromPath(path.resolve(__dirname, "./icon/logo.png"))
@@ -135,8 +55,8 @@ if (!gotTheLock) {
         ])
 
         tray.setContextMenu(contextMenu)
-
-        tray.setToolTip('This is my application')
+        tray.setToolTip(`${package.name}
+版本号：${package.version}`)
     }
 
     const init = () => {
@@ -182,7 +102,6 @@ if (!gotTheLock) {
             global.mainWindow.focus()
         }
     })
-
 
     app.on('quit', () => {
         app.releaseSingleInstanceLock();//释放所有的单例锁
