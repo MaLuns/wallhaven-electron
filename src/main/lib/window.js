@@ -1,6 +1,11 @@
 const path = require('path');
 const { app, BrowserWindow } = require('electron')
-const baseURL = path.resolve(__dirname, "../renderer");
+
+const getURL = (url) => require('url').format({
+    protocol: 'file',
+    slashes: true,
+    pathname: path.resolve(__dirname, "../../renderer/", url)
+})
 
 const createWindow = (function () {
     let win = null
@@ -20,7 +25,7 @@ const createWindow = (function () {
         })
 
         if (app.isPackaged) {
-            win.loadURL(`file://${baseURL}/index.html`)
+            win.loadURL(getURL('index.html'))
         } else {
             win.loadURL("http://localhost:8080")
             win.webContents.openDevTools()
@@ -57,7 +62,7 @@ const createConfigWindow = (function () {
         })
 
         if (app.isPackaged) {
-            win.loadURL(`file://${baseURL}/config.html`)
+            win.loadURL(getURL('config.html'))
         } else {
             win.loadURL("http://localhost:8080/config.html")
         }
