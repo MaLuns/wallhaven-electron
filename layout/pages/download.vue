@@ -21,25 +21,22 @@
                         </div>
                     </div>
                     <div class="down-content" :style="{ backgroundSize: `${img.progress}% 100%` }">
-                        <div class="img-info">
-                            <div class="img-resolution">
-                                尺寸：{{ img.resolution }}
-                            </div>
-                            <div class="img-size">
-                                图片大小：{{ img.size | byte }}
-                            </div>
-                            <div class="img-speed" v-if="img.state === 'downing'">
-                                下载速度：{{ img.speedBytes | byte }}/s
-                            </div>
-                            <div class="img-offset" v-if="img.state === 'wait'">
-                                等待中
-                            </div>
-                            <div class="img-offset" v-else>
-                                已下载：{{ img.offset | byte }}
-                            </div>
-                            <div class="clost-btn iconfont icon-guanbi" @click="handleClose(img)"></div>
+                        <div class="img-resolution">
+                            尺寸：{{ img.resolution }}
                         </div>
-                        <!-- <el-progress :status="img.state | state" :percentage="img.progress"></el-progress> -->
+                        <div class="img-size">
+                            大小：{{ img.size | byte }}
+                        </div>
+                        <div class="img-speed" v-if="img.state === 'downing'">
+                            下载速度：{{ img.speedBytes | byte }}/s
+                        </div>
+                        <div class="img-offset" v-if="img.state === 'wait'">
+                            等待中
+                        </div>
+                        <div class="img-offset" v-else>
+                            已下载：{{ img.offset | byte }}
+                        </div>
+                        <div class="clost-btn iconfont icon-guanbi" @click="handleClose(img)"></div>
                     </div>
                 </div>
             </template>
@@ -236,48 +233,40 @@ export default {
             //
             .down-content {
                 flex: 1;
-                padding: 0 20px;
                 background-image: linear-gradient(0deg, #363356, #363356);
                 background-repeat: no-repeat;
                 transition: background-size .3s;
+                padding: 0 20px;
 
-                .img-info {
-                    height: 60px;
-                    position: relative;
+                >div {
+                    font-size: 14px;
+                    color: rgb(173, 173, 173);
+                    position: absolute;
+                }
 
-                    >div {
-                        font-size: 14px;
-                        color: rgb(173, 173, 173);
-                        position: absolute;
-                    }
+                .img-resolution {
+                    top: 20px;
+                }
 
-                    .img-resolution {
-                        top: 10px;
-                        left: 0;
-                    }
+                .img-size {
+                    top: 20px;
+                    left: 280px;
+                }
 
-                    .img-size {
-                        bottom: 5px;
-                        left: 0px;
-                    }
+                .img-speed {
+                    top: 46px;
+                    left: 280px;
+                }
 
-                    .img-speed {
-                        bottom: 5px;
-                        right: 160px;
-                    }
+                .img-offset {
+                    top: 46px;
+                }
 
-                    .img-offset {
-                        bottom: 5px;
-                        right: 35px;
-                    }
-
-                    .clost-btn {
-                        position: absolute;
-                        top: 5px;
-                        padding: 5px;
-                        right: 0;
-                        cursor: pointer;
-                    }
+                .clost-btn {
+                    top: 25px;
+                    right: 20px;
+                    padding: 5px;
+                    cursor: pointer;
                 }
             }
 
@@ -293,16 +282,16 @@ export default {
 
                 .img-time {
                     top: 20px;
+                    left: 410px;
                 }
 
                 .img-size {
-                    top: 50px;
+                    top: 20px;
                     left: 280px;
                 }
 
                 .img-path {
-                    top: 50px;
-                    left: 410px;
+                    top: 46px;
                     width: 600px;
                     overflow: hidden;
                     white-space: nowrap;
@@ -310,7 +299,7 @@ export default {
                 }
 
                 .img-resolution {
-                    top: 50px;
+                    top: 20px;
                 }
 
                 .clost-btn {
