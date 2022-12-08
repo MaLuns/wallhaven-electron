@@ -9,20 +9,20 @@ if (!gotTheLock) {
     const path = require('path');
     const package = require('../../package.json')
     const Store = require('electron-store');
-    
+
     // 初始化 electron-store  需在主进程
     Store.initRenderer();
-    
+
     global.appDirname = __dirname;
     global.mainWindow = null;
-    
+
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
     const { createConfigWindow, createWindow } = require('./lib/window');
-    
+
     let configWindow;
     let tray;
 
-    const createTray = async () => {
+    const createTray = () => {
         const icon = nativeImage.createFromPath(path.resolve(__dirname, "./icon/logo.png"))
         tray = new Tray(icon)
 
@@ -30,14 +30,15 @@ if (!gotTheLock) {
             {
                 label: '打开壁纸程序',
                 type: 'normal',
-                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/app.png"), { height: 16, width: 16 }),
+                icon: nativeImage.createFromPath(path.resolve(__dirname, "./icon/app.png")),
                 click: () => {
                     global.mainWindow.show()
                 }
             },
             {
-                label: '设置', type: 'normal',
-                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/setting.png"), { height: 16, width: 16 }),
+                label: '设置',
+                type: 'normal',
+                icon: nativeImage.createFromPath(path.resolve(__dirname, "./icon/setting.png")),
                 click: () => {
                     if (configWindow) {
                         configWindow.show()
@@ -48,8 +49,8 @@ if (!gotTheLock) {
             },
             {
                 label: '退出',
-                icon: await nativeImage.createThumbnailFromPath(path.resolve(__dirname, "./icon/exit.png"), { height: 16, width: 16 }),
                 type: 'normal',
+                icon: nativeImage.createFromPath(path.resolve(__dirname, "./icon/exit.png")),
                 role: "quit"
             }
         ])

@@ -15,7 +15,7 @@ const createWindow = (function () {
             width: 1300,
             height: 800,
             backgroundColor: "#201f29",
-            icon: path.resolve(__dirname, "./icon/logo.png"),
+            icon: path.resolve(__dirname, "../icon/logo.png"),
             frame: false,
             show: false,
             webPreferences: {
@@ -49,7 +49,7 @@ const createConfigWindow = (function () {
             maxWidth: 450,
             maxHeight: 340,
             maximizable: false,
-            icon: path.resolve(__dirname, "./icon/logo.png"),
+            icon: path.resolve(__dirname, "../icon/logo.png"),
             resizable: false,
             show: false,
             frame: false,
