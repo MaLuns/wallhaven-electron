@@ -65,7 +65,7 @@ if (!gotTheLock) {
         const { db } = require('./lib/database')
         const { downloadPath } = db.appConfig.get()
 
-        if (!downloadPath) {
+        if (downloadPath) {
             app.setPath('downloads', downloadPath)
         } else {
             db.appConfig.set('downloadPath', app.getPath('downloads'))
