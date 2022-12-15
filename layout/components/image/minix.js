@@ -26,7 +26,7 @@ export default {
         handleDownFile(item, isSetWallpaper = false) {
             let { id, path: url, file_size: size, resolution, thumbs: { small } } = item;
             if (/^blob:/.test(this.path)) {
-                const downPath = localStorage.getItem('downloads');
+                const downPath = this.$store.appConfig.get('downloadPath');
                 const name = `wallhaven-${id}${url.substr(url.lastIndexOf('.'))}`;
                 const a = document.createElement("a")
                 a.href = this.path

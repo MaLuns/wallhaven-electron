@@ -137,7 +137,7 @@ export default {
         handleSetDownPath() {
             setPath().then(data => {
                 if (!data.canceled) {
-                    localStorage.setItem('downloads', data.filePaths[0])
+                    this.$store.appConfig.set('downloadPath', data.filePaths[0])
                     this.path = data.filePaths[0]
                 }
             })
