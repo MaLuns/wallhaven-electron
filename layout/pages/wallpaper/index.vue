@@ -73,7 +73,10 @@ export default {
             this.getlist(true)
         },
         getlist(reset = false) {
-            return ajax(`search?${objToUrl(this.search)}&page=${this.page++}`)
+            let url = `search?${objToUrl(this.search)}&page=${this.page++}`
+            let apikey = this.$store.appConfig.get('apiKey')
+            if (apikey) url += `&apikey=${apikey}`
+            return ajax(url)
                 .then(res => {
                     let { data, meta } = res;
                     if (this.page === 2) {

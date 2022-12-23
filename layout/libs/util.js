@@ -43,13 +43,11 @@ export const objToUrl = (obj = {}) => {
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             if (key === "purity") {
-                if (obj[key].length == 2) {
-                    str += `&${key}=111`;
-                } else if (obj[key][0] === 'SFW') {
-                    str += `&${key}=100`;
-                } else {
-                    str += `&${key}=010`;
-                }
+                let puritys = [0, 0, 0];
+                if (obj[key].includes('SFW')) puritys[0] = 1
+                if (obj[key].includes('Sketchy')) puritys[1] = 1
+                if (obj[key].includes('NSFW')) puritys[2] = 1
+                str += `&${key}=${puritys.join('')}`;
             } else if (obj[key] !== "") {
                 str += `&${key}=${obj[key]}`;
             }

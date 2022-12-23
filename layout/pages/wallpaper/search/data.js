@@ -2,7 +2,7 @@
 export const purityList = [
     { label: 'SFW', value: 'SFW' },
     { label: 'Sketchy', value: 'Sketchy' },
-    //{ label: 'NSFW', value: 'NSFW' }
+    { label: 'NSFW', value: 'NSFW' }
 ]
 
 // 分辨率
