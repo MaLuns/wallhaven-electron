@@ -14,14 +14,18 @@
                     <i class="iconfont icon-shaixuan-zhankai" v-else></i>
                 </div>
             </div>
-            <form-checkbox-radio label="场景" v-model="search.purity" :list="purityList" width="70px">
+            <form-checkbox-radio label="分类" v-model="search.categories" :list="categoriesList" type="radio"
+                width="60px">
             </form-checkbox-radio>
             <div v-show="more">
-                <form-checkbox-radio label="分辨率" v-model="resolution.type" :list="stypeList" type="radio" width="70px">
+                <form-checkbox-radio label="场景" v-model="search.purity" :list="purityList" width="60px">
                 </form-checkbox-radio>
-                <form-checkbox-radio label="" v-model="resolution.value" :list="resolutionList"
-                    :type="resolution.type === 'atleast' ? 'radio' : 'checkbox'" width="70px"></form-checkbox-radio>
-                <form-checkbox-radio label="比例" v-model="search.ratios" :list="ratiosList" width="70px">
+                <form-checkbox-radio label="分辨率" v-model="resolution.type" :list="stypeList" type="radio" width="60px">
+                </form-checkbox-radio>
+                <form-checkbox-radio label="" v-for="item in resolutionList" v-model="resolution.value" :list="item"
+                    :type="resolution.type === 'atleast' ? 'radio' : 'checkbox'" width="60px"></form-checkbox-radio>
+                <form-checkbox-radio :label="index === 0 ? '比例' : ''" v-for="(item, index) in ratiosList"
+                    v-model="search.ratios" :list="item" width="60px">
                 </form-checkbox-radio>
                 <form-checkbox-radio label="颜色" v-model="search.colors" :list="colorsList" type="radio">
                     <template #default="{ color }">
@@ -35,33 +39,25 @@
                         </template>
                     </template>
                 </form-checkbox-radio>
-                <form-checkbox-radio label="排序" v-model="search.order" :list="orderList" type="radio" width="50px">
+                <form-checkbox-radio label="排序" v-model="search.order" :list="orderList" type="radio" width="60px">
                 </form-checkbox-radio>
-                <form-checkbox-radio label="" v-model="search.sorting" :list="sortList" type="radio" width="50px">
+                <form-checkbox-radio label="" v-model="search.sorting" :list="sortList" type="radio" width="60px">
                 </form-checkbox-radio>
                 <form-checkbox-radio label="时间" v-model="search.topRange" :list="topRangeList"
-                    v-show="search.sorting === 'toplist'" type="radio" width="50px">
+                    v-show="search.sorting === 'toplist'" type="radio" width="60px">
                 </form-checkbox-radio>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { purityList, stypeList, resolutionList, ratiosList, colorsList, sortList, orderList, topRangeList } from "./data";
+import { purityList, stypeList, resolutionList, ratiosList, colorsList, sortList, orderList, topRangeList, categoriesList, defSearch } from "./data";
 
 export default {
     data() {
         return {
             more: false,
-            search: {
-                q: "",
-                order: "desc",
-                purity: ["SFW"],
-                sorting: "date_added",
-                colors: "",
-                ratios: [],
-                topRange: ""
-            },
+            search: { ...defSearch },
             resolution: {
                 value: [],
                 type: "atleast",
@@ -77,36 +73,28 @@ export default {
             colorsList,
             sortList,
             orderList,
-            topRangeList
+            topRangeList,
+            categoriesList
         }
     },
-    props: {
-        purity: {
-            type: Array,
-            default: () => (["SFW"])
-        },
-        sorting: {
-            type: String,
-            default: 'date_added',
-            validator: (value) => ['date_added', 'hot', 'random', 'toplist', 'favorites', 'views'].includes(value)
-        }
-    },
-    watch: {
-        purity: {
-            immediate: true,
-            handler(val) {
-                this.search.purity = val;
-            }
-        },
-        sorting: {
-            immediate: true,
-            handler(val) {
-                this.search.sorting = val;
+    /* watch: {
+        search: {
+            deep: true,
+            handler() {
+                this.handleSearch()
             }
         }
-    },
+    }, */
     methods: {
+        handleReset() {
+            this.search = { ...defSearch }
+            this.resolution.value = []
+        },
         handleSearch() {
+            this.$emit("search");
+            this.more = false
+        },
+        getSearch() {
             let { purity, ratios, ...search } = this.search
 
             if (purity.length === 0) purity = ["SFW"];
@@ -128,8 +116,7 @@ export default {
 
             search.ratios = ratios.join(',')
 
-            this.more = false
-            this.$emit("search", { ...search });
+            return { ...search }
         }
     }
 }
